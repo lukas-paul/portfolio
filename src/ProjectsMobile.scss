@@ -1,0 +1,48 @@
+
+@import url("https://fonts.googleapis.com/css2?family=Major+Mono+Display&family=Monoton&display=swap");
+
+.mobile-overlay {
+    position: absolute;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(26px);
+    color: white;
+    display: flex;
+    .mobile-overlay-left, .mobile-overlay-right {
+        width: 50%;
+        height: 100%;
+        padding-left: 10px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+       
+        h1 {
+            font-family: "Major Mono Display", monospace;;
+            margin: 0px;
+            color: white;
+        }
+    }
+    .mobile-overlay-right {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+}
+
+.tags {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+    .tag {
+        border-radius: 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0px;
+        padding: 5px;
+        background: rgba(0, 0, 0, 0.25);
+        color: white;
+    }
+}

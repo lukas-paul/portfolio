@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import sanityClient from "../client.js";
+import ProjectsMobile from "./ProjectsMobile";
 import "../Projects.scss";
 
 export default function Projects() {
@@ -7,6 +8,12 @@ export default function Projects() {
     const [showText, setShowText] = useState(false);
     const [showTopOverlay, setTopOverlay] = useState(true);
     const [showBottomOverlay, setBottomOverlay] = useState(true);
+
+    console.log("window Width: ", window.innerWidth);
+    let mobile = false;
+    if (window.innerWidth < 650) {
+        mobile = true;
+    }
 
     useEffect(() => {
         sanityClient
@@ -32,91 +39,99 @@ export default function Projects() {
         console.log("bottom visible");
         setBottomOverlay(index);
     };
-    return (
-        <main className="sub-page-content">
-            <section>
-                <h1 className="headline">Projects</h1>
+    if (mobile) {
+        return <ProjectsMobile />;
+    } else {
+        return (
+            <main className="sub-page-content">
                 <section>
-                    {projectData &&
-                        projectData.map((project, index) => (
-                            <article className="project">
-                                <div className="image-text-section">
-                                    <div className="image-section">
-                                        <img
-                                            src={project.mainImage.asset.url}
-                                            alt={project.mainImage.alt}
-                                        />
-                                        <a
-                                            href={project.link}
-                                            alt={project.title}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                        >
+                    <h1 className="headline">Projects</h1>
+                    <section>
+                        {projectData &&
+                            projectData.map((project, index) => (
+                                <article className="project">
+                                    <div className="image-text-section">
+                                        <div className="image-section">
+                                            <img
+                                                src={
+                                                    project.mainImage.asset.url
+                                                }
+                                                alt={project.mainImage.alt}
+                                            />
+                                            <a
+                                                href={project.link}
+                                                alt={project.title}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                            >
+                                                <div
+                                                    className="empty top"
+                                                    onMouseEnter={() =>
+                                                        topOverlayVisible(index)
+                                                    }
+                                                    onMouseLeave={() =>
+                                                        setTopOverlay(false)
+                                                    }
+                                                ></div>
+                                            </a>
+
                                             <div
-                                                className="empty top"
+                                                className="empty bottom"
                                                 onMouseEnter={() =>
-                                                    topOverlayVisible(index)
+                                                    bottomOverlayVisible(index)
                                                 }
                                                 onMouseLeave={() =>
-                                                    setTopOverlay(false)
+                                                    setBottomOverlay(false)
+                                                }
+                                                onClick={() =>
+                                                    textVisible(index)
                                                 }
                                             ></div>
-                                        </a>
-
-                                        <div
-                                            className="empty bottom"
-                                            onMouseEnter={() =>
-                                                bottomOverlayVisible(index)
-                                            }
-                                            onMouseLeave={() =>
-                                                setBottomOverlay(false)
-                                            }
-                                            onClick={() => textVisible(index)}
-                                        ></div>
-                                        {showTopOverlay === index && (
-                                            <div className="img-overlay top">
-                                                <h2>Visit</h2>
-                                            </div>
-                                        )}
-                                        {showBottomOverlay === index && (
-                                            <div className="img-overlay bottom">
-                                                <h2>Text</h2>
-                                            </div>
-                                        )}
+                                            {showTopOverlay === index && (
+                                                <div className="img-overlay top">
+                                                    <h2>Visit</h2>
+                                                </div>
+                                            )}
+                                            {showBottomOverlay === index && (
+                                                <div className="img-overlay bottom">
+                                                    <h2>Text</h2>
+                                                </div>
+                                            )}
+                                        </div>
+                                        <div className="desc-container">
+                                            {showText === index && (
+                                                <p>{project.description}</p>
+                                            )}
+                                        </div>
                                     </div>
-                                    <div className="desc-container">
-                                        {showText === index && (
-                                            <p>{project.description}</p>
-                                        )}
-                                    </div>
-                                </div>
-                                <div className="project-info">
-                                    <h3>
-                                        <a
-                                            href={project.link}
-                                            alt={project.title}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                        >
-                                            {project.title}
-                                        </a>
-                                    </h3>
+                                    <div className="project-info">
+                                        <h3>
+                                            <a
+                                                href={project.link}
+                                                alt={project.title}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                            >
+                                                {project.title}
+                                            </a>
+                                        </h3>
 
-                                    <span>
-                                        <strong>Date: </strong>{" "}
-                                        {new Date(
-                                            project.date
-                                        ).toLocaleDateString()}
-                                    </span>
-                                    <span>
-                                        <strong>Type: </strong>
-                                        {project.projectType}
-                                    </span>
-                                </div>
-                            </article>
-                        ))}
+                                        <span>
+                                            <strong>Date: </strong>{" "}
+                                            {new Date(
+                                                project.date
+                                            ).toLocaleDateString()}
+                                        </span>
+                                        <span>
+                                            <strong>Type: </strong>
+                                            {project.projectType}
+                                        </span>
+                                    </div>
+                                </article>
+                            ))}
+                    </section>
                 </section>
-            </section>
-        </main>
-    );
+            </main>
+        );
+    }
 }
