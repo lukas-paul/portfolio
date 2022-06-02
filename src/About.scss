@@ -1,0 +1,17 @@
+.about-page {
+    position: absolute;
+    font-family: "Major Mono Display", monospace;
+    left: 100px;
+}
+
+.title {
+    margin: 10px;
+    position: fixed;
+    top:20%
+}
+
+@media (max-width: 650px) {
+    .about-page {
+        left: 0px;
+    }
+}
