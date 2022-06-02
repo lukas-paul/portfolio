@@ -8,18 +8,15 @@ export default function Home() {
         g: 200,
         b: 200,
     };
+    let radiusMin;
+    let radiusMax;
     const setup = (p5) => {
+        let small = p5.windowWidth < 650 ? true : false;
+        radiusMin = small ? 30 : 50;
+        radiusMax = small ? 50 : 100;
         p5.createCanvas(p5.windowWidth, p5.windowHeight);
         p5.background(255);
-        /*
-        for (var i = 0; i < 10; i++) {
-            bubbles.push({
-                x: p5.random(p5.width),
-                y: p5.random(p5.height),
-                radius: p5.random(50, 100),
-            });
-        }
-        */
+
         bubbleColor.r = p5.random(200, 250);
         bubbleColor.g = p5.random(200, 250);
         bubbleColor.b = p5.random(200, 250);
@@ -50,7 +47,7 @@ export default function Home() {
         let dot = {
             x: p5.random(p5.width),
             y: p5.random(p5.height),
-            radius: p5.random(50, 100),
+            radius: p5.random(radiusMin, radiusMax),
         };
         bubbles.push(dot);
         if (bubbles.length > 200) {
@@ -74,6 +71,17 @@ export default function Home() {
             delta = 0;
         }
     };
+    let deltaMobile = 0;
+    const touchMoved = (p5, event) => {
+        deltaMobile += event.targetTouches[0].screenY;
+        console.log("delta: ", deltaMobile);
+        if (deltaMobile >= 3000 || deltaMobile <= -3000) {
+            bubbleColor.r = p5.random(200, 250);
+            bubbleColor.g = p5.random(200, 250);
+            bubbleColor.b = p5.random(200, 250);
+            deltaMobile = 0;
+        }
+    };
 
     return (
         <Sketch
@@ -81,6 +89,7 @@ export default function Home() {
             draw={draw}
             windowResized={windowResized}
             mouseWheel={mouseWheel}
+            touchMoved={touchMoved}
         />
     );
 }

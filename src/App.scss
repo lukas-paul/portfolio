@@ -136,9 +136,14 @@ h2 {
     .nav-bar {
         flex-direction: row;
         width: 100vw;
-        height: 100px;
+        height: 80px;
         bottom: 0px;
+        .active-nav-link, .nav-link {
+        height: 60px;
+        width: 60px;
     }
+    }
+    
     .header {
         left: 20px;
         padding-bottom: 120px;

@@ -22,6 +22,9 @@ export default function Projects() {
     const overlayOn = (index) => {
         setShowOverlay(index);
     };
+    const closeOverlay = () => {
+        setShowOverlay(false);
+    };
     return (
         <main className="sub-page-content">
             <section>
@@ -38,7 +41,10 @@ export default function Projects() {
                                             alt={project.mainImage.alt}
                                         />
                                         {showOverlay === index && (
-                                            <div className="mobile-overlay">
+                                            <div
+                                                className="mobile-overlay"
+                                                onClick={closeOverlay}
+                                            >
                                                 <div className="mobile-overlay-left">
                                                     <div className="overlay-text">
                                                         <h1>{project.title}</h1>
