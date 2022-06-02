@@ -1,4 +1,5 @@
 import React from "react";
+import "../Techstack.scss"
 
 export default function Home() {
     return (
@@ -29,6 +30,10 @@ export default function Home() {
                                     src="https://img.icons8.com/material-outlined/48/undefined/sass.png"
                                     alt="sass"
                                 />
+                            </div>
+                            <div className="stack-icon-container">
+                                <p>p5.js</p>
+                                <div className="stack-icon p5"></div>
                             </div>
                         </div>
                     </div>
@@ -88,6 +93,10 @@ export default function Home() {
                                     src="https://img.icons8.com/ios-filled/50/undefined/postgreesql.png"
                                     alt="postgres"
                                 />
+                            </div>
+                            <div className="stack-icon-container">
+                                <p>Socket.io</p>
+                                <div className="stack-icon socket"></div>
                             </div>
                         </div>
                     </div>

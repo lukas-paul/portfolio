@@ -16,6 +16,7 @@ a:link {
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
+    gap: 20px;
     .stack-icon-container {
         text-align: center;
     }
@@ -100,6 +101,7 @@ h2 {
     flex-direction: column;
     justify-content: space-between;
 }
+
 .headline {
     font-family: "Major Mono Display", monospace;
     font-weight: 400;
@@ -139,6 +141,7 @@ h2 {
     }
     .header {
         left: 20px;
+        padding-bottom: 120px;
     }
     .headline {
         font-family: "Major Mono Display", monospace;

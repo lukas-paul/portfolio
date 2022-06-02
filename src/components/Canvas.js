@@ -67,7 +67,7 @@ export default function Home() {
     const mouseWheel = (p5, event) => {
         console.log("delta: ", delta);
         delta += event.delta;
-        if (delta >= 100 || delta <= -100) {
+        if (delta >= 130 || delta <= -130) {
             bubbleColor.r = p5.random(200, 250);
             bubbleColor.g = p5.random(200, 250);
             bubbleColor.b = p5.random(200, 250);
