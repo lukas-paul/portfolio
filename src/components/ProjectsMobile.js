@@ -5,10 +5,7 @@ import "../ProjectsMobile.scss";
 
 export default function Projects() {
     const [projectData, setProjectData] = useState(null);
-    const [showText, setShowText] = useState(false);
     const [showOverlay, setShowOverlay] = useState(false);
-    const [showBottomOverlay, setBottomOverlay] = useState(true);
-
     useEffect(() => {
         sanityClient
             .fetch(
