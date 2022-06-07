@@ -1,7 +1,9 @@
 import React from "react";
 import Sketch from "react-p5";
 
-export default function Home() {
+export default function Home(prop) {
+    let mobile = prop;
+    console.log("Mobile: ", mobile);
     let bubbles = [];
     let bubbleColor = {
         r: 255,
@@ -70,15 +72,18 @@ export default function Home() {
             delta = 0;
         }
     };
+
     let deltaMobile = 0;
     const touchMoved = (p5, event) => {
-        deltaMobile += event.targetTouches[0].screenY;
-        if (deltaMobile >= 7000 || deltaMobile <= -7000) {
-            bubbleColor.r = p5.random(200, 250);
-            bubbleColor.g = p5.random(200, 250);
-            bubbleColor.b = p5.random(200, 250);
-            deltaMobile = 0;
-        }
+        if (mobile.prop) {
+            deltaMobile += event.targetTouches[0].screenY;
+            if (deltaMobile >= 7000 || deltaMobile <= -7000) {
+                bubbleColor.r = p5.random(200, 250);
+                bubbleColor.g = p5.random(200, 250);
+                bubbleColor.b = p5.random(200, 250);
+                deltaMobile = 0;
+            }
+        } else return;
     };
 
     return (

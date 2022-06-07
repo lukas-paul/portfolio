@@ -2,7 +2,10 @@ import React, { useState } from "react";
 import Canvas from "./Canvas";
 import Techstack from "./Techstack";
 
-export default function Home() {
+export default function Home(prop) {
+    let mobile = prop;
+    console.log("mobile in home: ", mobile);
+
     const [animateVal, setAnimateVal] = useState("On");
     const switchAnimate = () => {
         if (animateVal === "On") {
@@ -54,7 +57,7 @@ export default function Home() {
             </div>
             {animateVal && animateVal === "On" && (
                 <div className="canvas-parent">
-                    <Canvas />
+                    <Canvas prop={mobile.prop} />
                 </div>
             )}
         </main>

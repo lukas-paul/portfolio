@@ -7,7 +7,6 @@ export default function Projects(prop) {
     const [projectData, setProjectData] = useState(null);
     const [showOverlay, setShowOverlay] = useState(false);
     let mobile = prop;
-    console.log("mobile: ", mobile);
     useEffect(() => {
         sanityClient
             .fetch(
@@ -17,7 +16,6 @@ export default function Projects(prop) {
             )
             .then((data) => {
                 setProjectData(data);
-                console.log("data: ", data);
             })
             .catch(console.error);
     }, []);

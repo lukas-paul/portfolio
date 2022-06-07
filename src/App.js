@@ -15,9 +15,9 @@ function App() {
         <BrowserRouter>
             <NavBar />
             <Routes>
-                <Route element={<Home />} path="/" exact />
+                <Route element={<Home prop={mobile} />} path="/" exact />
                 <Route element={<About />} path="about" />
-                <Route element={<Projects mobile={mobile}/>} path="projects" />
+                <Route element={<Projects mobile={mobile} />} path="projects" />
             </Routes>
         </BrowserRouter>
     );
