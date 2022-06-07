@@ -4,30 +4,13 @@ import ProjectsMobile from "./ProjectsMobile";
 import "../Projects.scss";
 
 export default function Projects() {
-    const [projectData, setProjectData] = useState(null);
-    const [showText, setShowText] = useState(false);
-    const [showTopOverlay, setTopOverlay] = useState(true);
-    const [showBottomOverlay, setBottomOverlay] = useState(true);
-
     console.log("window Width: ", window.innerWidth);
     let mobile = false;
     if (window.innerWidth < 650) {
         mobile = true;
     }
 
-    useEffect(() => {
-        sanityClient
-            .fetch(
-                `*[_type == "project"]{
-            title, mainImage{asset->{_id,url},alt}, date, description, projectType,link, tags
-        }`
-            )
-            .then((data) => {
-                setProjectData(data);
-                console.log("data: ", data);
-            })
-            .catch(console.error);
-    }, []);
+    /*
     const textVisible = (index) => {
         setShowText(index);
     };
@@ -39,9 +22,10 @@ export default function Projects() {
         console.log("bottom visible");
         setBottomOverlay(index);
     };
-    if (mobile) {
-        return <ProjectsMobile />;
-    } else {
+    */
+    
+    return <ProjectsMobile prop={mobile} />;
+    /*else {
         return (
             <main className="sub-page-content">
                 <section>
@@ -134,4 +118,5 @@ export default function Projects() {
             </main>
         );
     }
+    */
 }

@@ -3,9 +3,11 @@ import sanityClient from "../client.js";
 import "../Projects.scss";
 import "../ProjectsMobile.scss";
 
-export default function Projects() {
+export default function Projects(prop) {
     const [projectData, setProjectData] = useState(null);
     const [showOverlay, setShowOverlay] = useState(false);
+    let mobile = prop;
+    console.log("mobile: ", mobile);
     useEffect(() => {
         sanityClient
             .fetch(
@@ -35,15 +37,37 @@ export default function Projects() {
                             <article className="project">
                                 <div className="image-text-section">
                                     <div className="image-section">
-                                        <img
-                                            onClick={() => overlayOn(index)}
-                                            src={project.mainImage.asset.url}
-                                            alt={project.mainImage.alt}
-                                        />
+                                        {mobile.prop && (
+                                            <img
+                                                onClick={() => overlayOn(index)}
+                                                src={
+                                                    project.mainImage.asset.url
+                                                }
+                                                alt={project.mainImage.alt}
+                                            />
+                                        )}
+                                        {!mobile.prop && (
+                                            <div>
+                                                <img
+                                                    onMouseEnter={() =>
+                                                        overlayOn(index)
+                                                    }
+                                                    src={
+                                                        project.mainImage.asset
+                                                            .url
+                                                    }
+                                                    alt={project.mainImage.alt}
+                                                />
+                                            </div>
+                                        )}
+
                                         {showOverlay === index && (
                                             <div
                                                 className="mobile-overlay"
                                                 onClick={closeOverlay}
+                                                onMouseLeave={() =>
+                                                    overlayOn(null)
+                                                }
                                             >
                                                 <div className="mobile-overlay-left">
                                                     <div className="overlay-text">
