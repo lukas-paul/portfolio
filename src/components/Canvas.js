@@ -3,7 +3,6 @@ import Sketch from "react-p5";
 
 export default function Home(prop) {
     let mobile = prop;
-    console.log("Mobile: ", mobile);
     let bubbles = [];
     let bubbleColor = {
         r: 255,

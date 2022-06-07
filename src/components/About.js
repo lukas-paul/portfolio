@@ -6,7 +6,7 @@ import "../About.scss";
 export default function About() {
     const [projectData, setProjectData] = useState(null);
     useEffect(() => {
-        sanityClient
+        sanityClient 
             .fetch(
                 `*[_type == "post"]{
             body, mainImage{asset->{_id,url},alt},

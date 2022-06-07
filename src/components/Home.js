@@ -4,7 +4,6 @@ import Techstack from "./Techstack";
 
 export default function Home(prop) {
     let mobile = prop;
-    console.log("mobile in home: ", mobile);
 
     const [animateVal, setAnimateVal] = useState("On");
     const switchAnimate = () => {
