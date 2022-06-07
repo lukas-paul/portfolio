@@ -7,13 +7,17 @@ import "./App.scss";
 
 
 function App() {
+    let mobile = false;
+    if (window.innerWidth < 650) {
+        mobile = true;
+    }
     return (
         <BrowserRouter>
             <NavBar />
             <Routes>
                 <Route element={<Home />} path="/" exact />
-                <Route element={<About />} path="/about" />
-                <Route element={<Projects />} path="projects" />
+                <Route element={<About />} path="about" />
+                <Route element={<Projects mobile={mobile}/>} path="projects" />
             </Routes>
         </BrowserRouter>
     );

@@ -1,122 +1,130 @@
 import React, { useEffect, useState } from "react";
 import sanityClient from "../client.js";
-import ProjectsMobile from "./ProjectsMobile";
 import "../Projects.scss";
+import "../ProjectsMobile.scss";
 
-export default function Projects() {
-    console.log("window Width: ", window.innerWidth);
-    let mobile = false;
-    if (window.innerWidth < 650) {
-        mobile = true;
-    }
-
-    /*
-    const textVisible = (index) => {
-        setShowText(index);
+export default function Projects(prop) {
+    const [projectData, setProjectData] = useState(null);
+    const [showOverlay, setShowOverlay] = useState(false);
+    let mobile = prop;
+    console.log("mobile: ", mobile);
+    useEffect(() => {
+        sanityClient
+            .fetch(
+                `*[_type == "project"]{
+            title, mainImage{asset->{_id,url},alt}, date, description, projectType,link, tags
+        }`
+            )
+            .then((data) => {
+                setProjectData(data);
+                console.log("data: ", data);
+            })
+            .catch(console.error);
+    }, []);
+    const overlayOn = (index) => {
+        setShowOverlay(index);
     };
-    const topOverlayVisible = (index) => {
-        console.log("top visible");
-        setTopOverlay(index);
+    const closeOverlay = () => {
+        setShowOverlay(false);
     };
-    const bottomOverlayVisible = (index) => {
-        console.log("bottom visible");
-        setBottomOverlay(index);
-    };
-    */
-    
-    return <ProjectsMobile prop={mobile} />;
-    /*else {
-        return (
-            <main className="sub-page-content">
+    return (
+        <main className="sub-page-content">
+            <section>
+                <h1 className="headline">Projects</h1>
                 <section>
-                    <h1 className="headline">Projects</h1>
-                    <section>
-                        {projectData &&
-                            projectData.map((project, index) => (
-                                <article className="project">
-                                    <div className="image-text-section">
-                                        <div className="image-section">
+                    {projectData &&
+                        projectData.map((project, index) => (
+                            <article className="project" key={index}>
+                                <div className="image-text-section">
+                                    <div className="image-section">
+                                        {mobile.prop ? (
                                             <img
+                                                onClick={() => overlayOn(index)}
                                                 src={
                                                     project.mainImage.asset.url
                                                 }
                                                 alt={project.mainImage.alt}
                                             />
-                                            <a
-                                                href={project.link}
-                                                alt={project.title}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                            >
-                                                <div
-                                                    className="empty top"
-                                                    onMouseEnter={() =>
-                                                        topOverlayVisible(index)
-                                                    }
-                                                    onMouseLeave={() =>
-                                                        setTopOverlay(false)
-                                                    }
-                                                ></div>
-                                            </a>
-
-                                            <div
-                                                className="empty bottom"
+                                        ) : (
+                                            <img
                                                 onMouseEnter={() =>
-                                                    bottomOverlayVisible(index)
+                                                    overlayOn(index)
                                                 }
+                                                src={
+                                                    project.mainImage.asset.url
+                                                }
+                                                alt={project.mainImage.alt}
+                                            />
+                                        )}
+                                        {showOverlay === index && (
+                                            <div
+                                                className="mobile-overlay"
+                                                onClick={closeOverlay}
                                                 onMouseLeave={() =>
-                                                    setBottomOverlay(false)
+                                                    overlayOn(null)
                                                 }
-                                                onClick={() =>
-                                                    textVisible(index)
-                                                }
-                                            ></div>
-                                            {showTopOverlay === index && (
-                                                <div className="img-overlay top">
-                                                    <h2>Visit</h2>
-                                                </div>
-                                            )}
-                                            {showBottomOverlay === index && (
-                                                <div className="img-overlay bottom">
-                                                    <h2>Text</h2>
-                                                </div>
-                                            )}
-                                        </div>
-                                        <div className="desc-container">
-                                            {showText === index && (
-                                                <p>{project.description}</p>
-                                            )}
-                                        </div>
-                                    </div>
-                                    <div className="project-info">
-                                        <h3>
-                                            <a
-                                                href={project.link}
-                                                alt={project.title}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
                                             >
-                                                {project.title}
-                                            </a>
-                                        </h3>
-
-                                        <span>
-                                            <strong>Date: </strong>{" "}
-                                            {new Date(
-                                                project.date
-                                            ).toLocaleDateString()}
-                                        </span>
-                                        <span>
-                                            <strong>Type: </strong>
-                                            {project.projectType}
-                                        </span>
+                                                <div className="mobile-overlay-left">
+                                                    <div className="overlay-text">
+                                                        <h1>{project.title}</h1>
+                                                        <div>
+                                                            <p>
+                                                                {new Date(
+                                                                    project.date
+                                                                ).toLocaleDateString()}
+                                                            </p>
+                                                            <p>
+                                                                Type:{" "}
+                                                                {
+                                                                    project.projectType
+                                                                }
+                                                            </p>
+                                                        </div>
+                                                        <div className="tags">
+                                                            {projectData[
+                                                                index
+                                                            ].tags.map(
+                                                                (
+                                                                    tag,
+                                                                    index
+                                                                ) => (
+                                                                    <p
+                                                                        className="tag"
+                                                                        key={
+                                                                            index
+                                                                        }
+                                                                    >
+                                                                        {tag}
+                                                                    </p>
+                                                                )
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div className="mobile-overlay-right">
+                                                    {project.link && (
+                                                        <a
+                                                            href={project.link}
+                                                            alt={project.title}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                        >
+                                                            <h1>Visit</h1>
+                                                        </a>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        )}
                                     </div>
-                                </article>
-                            ))}
-                    </section>
+
+                                    <div className="desc-container">
+                                        <p>{project.description}</p>
+                                    </div>
+                                </div>
+                            </article>
+                        ))}
                 </section>
-            </main>
-        );
-    }
-    */
+            </section>
+        </main>
+    );
 }

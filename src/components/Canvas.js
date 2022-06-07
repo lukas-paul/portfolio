@@ -75,7 +75,7 @@ export default function Home() {
     const touchMoved = (p5, event) => {
         deltaMobile += event.targetTouches[0].screenY;
         console.log("delta: ", deltaMobile);
-        if (deltaMobile >= 3000 || deltaMobile <= -3000) {
+        if (deltaMobile >= 7000 || deltaMobile <= -7000) {
             bubbleColor.r = p5.random(200, 250);
             bubbleColor.g = p5.random(200, 250);
             bubbleColor.b = p5.random(200, 250);
