@@ -14,7 +14,6 @@ export default function About() {
             )
             .then((data) => {
                 setProjectData(data[0]);
-                console.log("data: ", data);
             })
             .catch(console.error);
     }, []);
