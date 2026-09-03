@@ -3,10 +3,9 @@ import sanityClient from "../client.js";
 import "../Projects.scss";
 import "../ProjectsMobile.scss";
 
-export default function Projects(prop) {
+export default function Projects({ mobile }) {
     const [projectData, setProjectData] = useState(null);
     const [showOverlay, setShowOverlay] = useState(false);
-    let mobile = prop;
     useEffect(() => {
         sanityClient
             .fetch(
@@ -19,8 +18,11 @@ export default function Projects(prop) {
             })
             .catch(console.error);
     }, []);
-    const overlayOn = (index) => {
+    const openOverlay = (index) => {
         setShowOverlay(index);
+    };
+    const toggleOverlay = (index) => {
+        setShowOverlay((current) => (current === index ? false : index));
     };
     const closeOverlay = () => {
         setShowOverlay(false);
@@ -35,31 +37,35 @@ export default function Projects(prop) {
                             <article className="project" key={index}>
                                 <div className="image-text-section">
                                     <div className="image-section">
-                                        {mobile.prop ? (
+                                        <button
+                                            type="button"
+                                            className="image-toggle"
+                                            onClick={() => toggleOverlay(index)}
+                                            onMouseEnter={
+                                                mobile
+                                                    ? undefined
+                                                    : () => openOverlay(index)
+                                            }
+                                            aria-expanded={showOverlay === index}
+                                            aria-label={`Details for ${project.title}`}
+                                        >
                                             <img
-                                                onClick={() => overlayOn(index)}
                                                 src={
                                                     project.mainImage.asset.url
                                                 }
-                                                alt={project.mainImage.alt}
-                                            />
-                                        ) : (
-                                            <img
-                                                onMouseEnter={() =>
-                                                    overlayOn(index)
+                                                alt={
+                                                    project.mainImage.alt || ""
                                                 }
-                                                src={
-                                                    project.mainImage.asset.url
-                                                }
-                                                alt={project.mainImage.alt}
                                             />
-                                        )}
+                                        </button>
                                         {showOverlay === index && (
                                             <div
                                                 className="mobile-overlay"
                                                 onClick={closeOverlay}
-                                                onMouseLeave={() =>
-                                                    overlayOn(null)
+                                                onMouseLeave={
+                                                    mobile
+                                                        ? undefined
+                                                        : closeOverlay
                                                 }
                                             >
                                                 <div className="mobile-overlay-left">

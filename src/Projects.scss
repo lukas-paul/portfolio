@@ -14,6 +14,22 @@ section {
         .image-section {
             position: relative;
 
+            .image-toggle {
+                display: block;
+                width: 100%;
+                margin: 0;
+                padding: 0;
+                border: 0;
+                background: none;
+                font: inherit;
+                color: inherit;
+                cursor: pointer;
+            }
+            .image-toggle:focus-visible {
+                outline: 2px solid black;
+                outline-offset: 2px;
+            }
+
             img {
                 width: 100%;
                 max-height: 60vh;
