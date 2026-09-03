@@ -16,9 +16,14 @@ export default function Home(prop) {
     };
     return (
         <main>
-            <h3 className="animate" onClick={switchAnimate}>
+            <button
+                type="button"
+                className="animate"
+                onClick={switchAnimate}
+                aria-pressed={animateVal === "On"}
+            >
                 Animate: {animateVal}
-            </h3>
+            </button>
             <div className="header">
                 <div>
                     <h1 className="headline">Lukas Frenzer</h1>

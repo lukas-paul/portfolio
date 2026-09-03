@@ -8,6 +8,7 @@ export default function NavBar() {
                 <nav className="nav-bar">
                     <NavLink
                         to="/"
+                        aria-label="Home"
                         className={({ isActive }) =>
                             isActive ? "active-nav-link active-home-button" : "nav-link home-button"
                         }

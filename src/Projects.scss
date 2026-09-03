@@ -1,83 +1,51 @@
-@import url("https://fonts.googleapis.com/css2?family=Major+Mono+Display&family=Monoton&display=swap");
-
 section {
     display: flex;
     flex-direction: column;
-    gap: 50px;
+    gap: 28px;
 }
 
 .project {
     display: flex;
-    flex-direction: row;
-    width: 80%;
+    flex-direction: column;
+    gap: 16px;
+    width: min(100%, 900px);
+
     .image-text-section {
-        height: 100%;
-        .desc-container {
-            width: 100%;
-            height: 200px;
-        }
         .image-section {
             position: relative;
+
             img {
                 width: 100%;
-            }
-            .img-overlay {
-                position: absolute;
-                background: rgba(0, 0, 0, 0.25);
-                backdrop-filter: blur(26px);
-                width: 100%;
-                height: 50%;
-                color: white;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                font-family: "Major Mono Display", monospace;
-            }
-            .top {
-                top: 0px;
-            }
-            .bottom {
-                bottom: 0px;
-                cursor: pointer;
-            }
-            .empty {
-                position: absolute;
-                width: 100%;
-                height: 50%;
-                z-index: 10000;
+                max-height: 60vh;
+                object-fit: cover;
+                display: block;
             }
         }
-    }
-    .project-info {
-        display: flex;
-        flex-direction: column;
-        white-space: nowrap;
-        padding: 5px;
-        h3 {
-            font-family: "Major Mono Display", monospace;
+
+        .desc-container {
+            width: 100%;
+            margin-top: 16px;
+
+            p {
+                margin: 0px;
+                max-width: var(--measure);
+                line-height: 1.55;
+            }
         }
     }
 }
 
 @media (max-width: 650px) {
     p {
-        font-size: 12px;
+        font-size: var(--fs-200);
     }
     h2 {
-        font-size: 15px;
-    }
-    .sub-page-content {
-        left: 0px;
+        font-size: var(--fs-200);
     }
     section {
-        left: 20px;
-        top: 100px;
         width: 100%;
     }
     .project {
-        width: 95%;
-    }
-    .project-info {
-        font-size: 10px;
+        width: 100%;
     }
 }

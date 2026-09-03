@@ -1,14 +1,21 @@
-.stack-icon {
+.stack-icon-container {
+    p {
+        font-size: var(--fs-200);
+        margin: 0px 0px 6px;
+    }
+}
 
+.stack-icon {
+    width: 48px;
     height: 48px;
     background: center no-repeat;
     background-size: 48px 48px;
 }
 
-.socket {
-    
-    background-image: url("./icon/socket.png");
-    
+.p5 {
+    background-image: url("./icon/p5.png");
 }
 
-
+.socket {
+    background-image: url("./icon/socket.png");
+}

@@ -1,8 +1,30 @@
-@import url("https://fonts.googleapis.com/css2?family=Major+Mono+Display&family=Monoton&display=swap");
+:root {
+    // layout
+    --rail: 100px;
+    --gutter: 24px;
+    --content-x: calc(var(--rail) + var(--gutter));
+    --measure: 68ch;
+    --nav-safe: 100px; // space reserved for the fixed bottom nav on mobile
+
+    // type scale
+    --fs-100: 0.75rem; // 12
+    --fs-200: 0.875rem; // 14
+    --fs-300: 1rem; // 16
+    --fs-400: 1.125rem; // 18
+    --fs-600: 1.75rem; // 28
+    --fs-headline: clamp(1.75rem, 5.5vw, 3rem);
+
+    --ease: 0.15s ease;
+}
 
 * {
-    user-select: none;
     text-decoration: none;
+}
+
+.nav-bar,
+.headline,
+.animate {
+    user-select: none;
 }
 
 a {
@@ -10,6 +32,12 @@ a {
 }
 a:link {
     color: inherit;
+}
+// links inside running text get an affordance
+.short-info a:hover,
+.about-text-container a:hover,
+.mobile-overlay a:hover {
+    text-decoration: underline;
 }
 
 .flex-row {
@@ -30,6 +58,7 @@ a:link {
 }
 h2 {
     margin-bottom: 0px;
+    font-size: var(--fs-400);
 }
 
 .nav-bar {
@@ -39,25 +68,11 @@ h2 {
     justify-content: space-around;
     background-color: white;
     height: 100vh;
-    width: 100px;
+    width: var(--rail);
     align-items: center;
     border-right: 1px solid black;
     z-index: 1000;
-    .nav-link {
-        color: black;
-        height: 80px;
-        width: 80px;
-        border-radius: 50%;
-        background-color: white;
-        color: black;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-    .nav-link:hover {
-        background-color: black;
-        color: white;
-    }
+    .nav-link,
     .active-nav-link {
         height: 80px;
         width: 80px;
@@ -65,9 +80,21 @@ h2 {
         display: flex;
         justify-content: center;
         align-items: center;
+        font-size: var(--fs-200);
+        transition: background-color var(--ease), color var(--ease);
+    }
+    .nav-link {
+        color: black;
+        background-color: white;
+        border: 1px solid black;
+    }
+    .nav-link:hover,
+    .active-nav-link {
         background-color: black;
         color: white;
+        border: 1px solid black;
     }
+
     $home-icon-dark: "data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20width='26'%20height='26'%3E%3Cpath%20fill='black'%20d='M12%203%202%2012h3v9h6v-6h2v6h6v-9h3z'/%3E%3C/svg%3E";
     $home-icon-light: "data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20width='26'%20height='26'%3E%3Cpath%20fill='white'%20d='M12%203%202%2012h3v9h6v-6h2v6h6v-9h3z'/%3E%3C/svg%3E";
     .home-button {
@@ -85,41 +112,56 @@ h2 {
 }
 
 .animate {
-    margin: 0px;
     position: fixed;
-    top: 20px;
-    right: 20px;
+    top: 16px;
+    right: 16px;
+    z-index: 1100;
+    margin: 0px;
+    padding: 6px 14px;
+    font: inherit;
+    font-size: var(--fs-200);
+    line-height: 1;
+    background: white;
+    color: black;
+    border: 1px solid black;
+    border-radius: 999px;
     cursor: pointer;
+    transition: background-color var(--ease), color var(--ease);
+}
+.animate:hover {
+    background: black;
+    color: white;
 }
 
 .header {
     position: absolute;
     color: black;
-    top: 20%;
-    left: 120px;
-    margin-bottom: 20px;
-    width: 70vw;
-    height: 180vh;
+    top: 15%;
+    left: var(--content-x);
+    width: min(1100px, calc(100vw - var(--content-x) - var(--gutter)));
+    padding-bottom: 120px;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    gap: clamp(2rem, 7vh, 4.5rem);
 }
 
 .headline {
     font-family: "Major Mono Display", monospace;
     font-weight: 400;
-    font-size: 50px;
-    font-stretch: expanded;
+    font-size: var(--fs-headline);
+    overflow-wrap: break-word;
     border-radius: 10px;
     margin: 0px;
 }
 .short-info {
-    margin-top: 20px;
     padding-top: 10px;
     padding-bottom: 10px;
-    width: 70vw;
+    width: 100%;
     border-top: 1px black solid;
     border-bottom: 1px black solid;
+    .container {
+        max-width: var(--measure);
+    }
 }
 
 .p5Canvas {
@@ -131,43 +173,39 @@ h2 {
 
 .sub-page-content {
     position: absolute;
-    left: 100px;
-    margin-left: 10px;
+    left: var(--content-x);
+    padding-right: var(--gutter);
 }
 
 @media (max-width: 650px) {
+    :root {
+        --content-x: 16px;
+    }
     .nav-bar {
         flex-direction: row;
         width: 100vw;
         height: 80px;
         bottom: 0px;
-        .active-nav-link, .nav-link {
-        height: 60px;
-        width: 60px;
+        .active-nav-link,
+        .nav-link {
+            height: 60px;
+            width: 60px;
+        }
     }
-    }
-    
+
     .header {
-        left: 20px;
-        padding-bottom: 120px;
+        top: 12%;
+        padding-bottom: var(--nav-safe);
     }
-    .headline {
-        font-family: "Major Mono Display", monospace;
-        font-weight: 400;
-        font-size: 40px;
-        font-stretch: expanded;
-        border-radius: 10px;
-        margin: 0px;
-    }
+    .about-page,
     .sub-page-content {
-        left: 0px;
+        padding-bottom: var(--nav-safe);
     }
     .animate {
         top: 10px;
         right: 10px;
-        font-size: 15px;
     }
     .short-info {
-        width: 80vw;
+        width: 100%;
     }
 }
