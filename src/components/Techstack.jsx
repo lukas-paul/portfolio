@@ -5,10 +5,10 @@ export default function Home() {
     return (
         <div className="short-info">
             <div className="container">
-                <h1 className="headline">Tech Stack</h1>
+                <h2 className="headline">Tech Stack</h2>
                 <div className="flex-row">
                     <div className="substack">
-                        <h2>Style, Structure, Animation</h2>
+                        <h3>Style, Structure, Animation</h3>
                         <div className="flex-row">
                             <div className="stack-icon-container">
                                 <p>HTML5</p>
@@ -38,7 +38,7 @@ export default function Home() {
                         </div>
                     </div>
                     <div className="substack">
-                        <h2>Language, Library, Framework</h2>
+                        <h3>Language, Library, Framework</h3>
                         <div className="flex-row">
                             <div className="stack-icon-container">
                                 <p>JavaScript</p>
@@ -78,7 +78,7 @@ export default function Home() {
                         </div>
                     </div>
                     <div className="substack">
-                        <h2>Backend Technology</h2>
+                        <h3>Backend Technology</h3>
                         <div className="flex-row">
                             <div className="stack-icon-container">
                                 <p>Nodejs</p>

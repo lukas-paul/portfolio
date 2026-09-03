@@ -6,13 +6,17 @@
     --measure: 68ch;
     --mobile-nav-h: 80px; // height of the bottom nav bar on mobile
 
-    // type scale
+    // body type scale
     --fs-100: 0.75rem; // 12
     --fs-200: 0.875rem; // 14
     --fs-300: 1rem; // 16
     --fs-400: 1.125rem; // 18
     --fs-600: 1.75rem; // 28
-    --fs-headline: clamp(1.75rem, 5.5vw, 3rem);
+
+    // headline hierarchy (h1 > h2 > h3)
+    --fs-h1: clamp(2rem, 6vw, 3.25rem); // 32 -> 52
+    --fs-h2: clamp(1.5rem, 3.6vw, 2.25rem); // 24 -> 36
+    --fs-h3: clamp(1.1rem, 2vw, 1.4rem); // 17.6 -> 22.4
 
     --ease: 0.15s ease;
 }
@@ -68,7 +72,8 @@ a:link {
         gap: 10px;
     }
 }
-h2 {
+// tech-stack category labels
+h3 {
     margin-bottom: 0px;
     font-size: var(--fs-400);
 }
@@ -158,10 +163,19 @@ h2 {
 .headline {
     font-family: "Major Mono Display", monospace;
     font-weight: 400;
-    font-size: var(--fs-headline);
+    font-size: var(--fs-h2); // fallback; per-level sizes below
     overflow-wrap: break-word;
     border-radius: 10px;
     margin: 0px;
+}
+h1.headline {
+    font-size: var(--fs-h1);
+}
+h2.headline {
+    font-size: var(--fs-h2);
+}
+h3.headline {
+    font-size: var(--fs-h3);
 }
 .short-info {
     width: 100%;

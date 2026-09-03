@@ -27,14 +27,14 @@ export default function Home(prop) {
             <div className="header">
                 <div>
                     <h1 className="headline">Lukas Frenzer</h1>
-                    <h1 className="headline">Web Development</h1>
+                    <h2 className="headline">Web Development, Comedy, Writing.</h2>
                 </div>
                 <div className="short-info">
-                    <div className="container">
+                    <p className="container">
                         I develop things for the Internet. I am a trained Full
                         Stack Developer, meaning I am familiar with back- and
                         front-end technologies.
-                    </div>
+                    </p>
                 </div>
                 <Techstack />
             </div>
