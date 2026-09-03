@@ -142,7 +142,7 @@ h2 {
     padding-bottom: 120px;
     display: flex;
     flex-direction: column;
-    gap: clamp(2rem, 7vh, 4.5rem);
+    gap: clamp(4rem, 14vh, 9rem);
 }
 
 .headline {
@@ -157,8 +157,8 @@ h2 {
     padding-top: 10px;
     padding-bottom: 10px;
     width: 100%;
-    border-top: 1px black solid;
-    border-bottom: 1px black solid;
+    border-top: 3px black solid;
+    border-bottom: 3px black solid;
     .container {
         max-width: var(--measure);
     }
