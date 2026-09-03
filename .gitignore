@@ -10,7 +10,10 @@ node_modules
 
 # production
 /build
-/studio/dist
+
+# sanity
+.sanity/
+/dist
 
 # misc
 .DS_Store
