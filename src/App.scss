@@ -161,19 +161,43 @@ h3 {
 
     // barely-there wash behind each content block: a whisper of white
     // gradient + a light backdrop blur just evens out the moving canvas
-    // so the text stays readable — the animation still reads clearly
-    // through it, and at full strength in the gaps between blocks
+    // so the text stays readable. A radial mask feathers every edge of
+    // the wash (and the blur) out to full transparency, so there is no
+    // panel outline — the animation reads clearly through it and at
+    // full strength in the gaps between blocks.
     > div {
+        position: relative;
         box-sizing: border-box;
-        padding: clamp(1.1rem, 2.5vw, 1.75rem) clamp(1.25rem, 3vw, 2rem);
-        background: linear-gradient(
-            160deg,
-            rgba(255, 255, 255, 0.22),
-            rgba(255, 255, 255, 0.04)
-        );
-        border-radius: 18px;
-        backdrop-filter: blur(5px);
-        -webkit-backdrop-filter: blur(5px);
+        padding: clamp(2rem, 6vw, 3.5rem) clamp(2rem, 5vw, 3.5rem);
+
+        // keep the text above the wash layer
+        > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        // the wash lives on a pseudo-element behind the text so the
+        // feather mask only touches the wash, never the content
+        &::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                160deg,
+                rgba(255, 255, 255, 0.34),
+                rgba(255, 255, 255, 0.04)
+            );
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+
+            $edge-fade: radial-gradient(
+                ellipse closest-side at 50% 45%,
+                #000 40%,
+                transparent 100%
+            );
+            -webkit-mask-image: $edge-fade;
+            mask-image: $edge-fade;
+        }
     }
 }
 
