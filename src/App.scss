@@ -14,7 +14,7 @@
     --fs-600: 1.75rem; // 28
 
     // headline hierarchy (h1 > h2 > h3)
-    --fs-h1: clamp(2rem, 6vw, 3.25rem); // 32 -> 52
+    --fs-h1: clamp(2.75rem, 8vw, 74px); // 44 -> 74
     --fs-h2: clamp(1.5rem, 3.6vw, 2.25rem); // 24 -> 36
     --fs-h3: clamp(1.1rem, 2vw, 1.4rem); // 17.6 -> 22.4
 
@@ -170,6 +170,7 @@ h3 {
 }
 h1.headline {
     font-size: var(--fs-h1);
+    font-weight: 600;
 }
 h2.headline {
     font-size: var(--fs-h2);
@@ -179,6 +180,8 @@ h3.headline {
 }
 .short-info {
     width: 100%;
+    font-size: var(--fs-400);
+    line-height: 1.5;
     .container {
         max-width: var(--measure);
     }
