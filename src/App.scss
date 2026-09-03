@@ -4,7 +4,10 @@
     --gutter: 24px;
     --content-x: calc(var(--rail) + var(--gutter));
     --measure: 68ch;
-    --nav-safe: 100px; // space reserved for the fixed bottom nav on mobile
+    --footer-h: 48px; // approximate height of the fixed footer
+    --mobile-nav-h: 80px; // height of the bottom nav bar on mobile
+    // bottom padding pages need so content clears the fixed footer (+ mobile nav)
+    --nav-safe: calc(var(--footer-h) + 24px);
 
     // type scale
     --fs-100: 0.75rem; // 12
@@ -139,7 +142,7 @@ h2 {
     top: 15%;
     left: var(--content-x);
     width: min(1100px, calc(100vw - var(--content-x) - var(--gutter)));
-    padding-bottom: 120px;
+    padding-bottom: calc(120px + var(--footer-h));
     display: flex;
     flex-direction: column;
     gap: clamp(4rem, 14vh, 9rem);
@@ -175,16 +178,19 @@ h2 {
     position: absolute;
     left: var(--content-x);
     padding-right: var(--gutter);
+    padding-bottom: var(--nav-safe);
 }
 
 @media (max-width: 650px) {
     :root {
         --content-x: 16px;
+        // content must also clear the bottom nav bar on mobile
+        --nav-safe: calc(var(--footer-h) + var(--mobile-nav-h) + 24px);
     }
     .nav-bar {
         flex-direction: row;
         width: 100vw;
-        height: 80px;
+        height: var(--mobile-nav-h);
         bottom: 0px;
         .active-nav-link,
         .nav-link {
@@ -195,11 +201,6 @@ h2 {
 
     .header {
         top: 12%;
-        padding-bottom: var(--nav-safe);
-    }
-    .about-page,
-    .sub-page-content {
-        padding-bottom: var(--nav-safe);
     }
     .animate {
         top: 10px;

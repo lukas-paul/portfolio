@@ -37,27 +37,6 @@ export default function Home(prop) {
                     </div>
                 </div>
                 <Techstack />
-                <div className="short-info">
-                    <div className="container flex-row">
-                        <a
-                            href="https://www.linkedin.com/in/lukas-frenzer-7abb01137/"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >
-                            <p>LinkedIn</p>
-                        </a>
-                        <a
-                            href="https://github.com/lukas-paul"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >
-                            <p>Github</p>
-                        </a>
-                        <a href="mailto:lukas.frenzer@web.de?subject=Web Development Enquiry">
-                            <p>Email</p>
-                        </a>
-                    </div>
-                </div>
             </div>
             {animateVal && animateVal === "On" && (
                 <div className="canvas-parent">

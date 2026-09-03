@@ -1,0 +1,32 @@
+.site-footer {
+    position: fixed;
+    bottom: 0;
+    left: var(--rail); // clear the left navigation rail
+    right: 0;
+    z-index: 900; // above page content, below the nav (1000)
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: clamp(1.5rem, 6vw, 4rem);
+
+    padding: 12px var(--gutter);
+    background: white;
+    border-top: 3px solid black;
+    text-align: center;
+    font-size: var(--fs-200);
+
+    a {
+        color: black;
+    }
+    a:hover {
+        text-decoration: underline;
+    }
+}
+
+@media (max-width: 650px) {
+    .site-footer {
+        left: 0; // mobile nav sits along the bottom, not the side
+        bottom: var(--mobile-nav-h);
+    }
+}
