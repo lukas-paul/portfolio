@@ -159,21 +159,21 @@ h3 {
     flex-direction: column;
     gap: clamp(4rem, 14vh, 9rem);
 
-    // soft frosted panel behind each content block: steady contrast for
-    // the text while the canvas animation stays visible through it (and
-    // fully visible in the gaps between blocks)
+    // barely-there wash behind each content block: a whisper of white
+    // gradient + a light backdrop blur just evens out the moving canvas
+    // so the text stays readable — the animation still reads clearly
+    // through it, and at full strength in the gaps between blocks
     > div {
         box-sizing: border-box;
         padding: clamp(1.1rem, 2.5vw, 1.75rem) clamp(1.25rem, 3vw, 2rem);
         background: linear-gradient(
-            155deg,
-            rgba(255, 255, 255, 0.92),
-            rgba(255, 255, 255, 0.72)
+            160deg,
+            rgba(255, 255, 255, 0.22),
+            rgba(255, 255, 255, 0.04)
         );
         border-radius: 18px;
-        box-shadow: 0 6px 28px rgba(0, 0, 0, 0.05);
-        backdrop-filter: blur(4px);
-        -webkit-backdrop-filter: blur(4px);
+        backdrop-filter: blur(5px);
+        -webkit-backdrop-filter: blur(5px);
     }
 }
 
