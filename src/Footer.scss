@@ -1,16 +1,13 @@
 .site-footer {
-    position: fixed;
-    bottom: 0;
-    left: var(--rail); // clear the left navigation rail
-    right: 0;
-    z-index: 900; // above page content, below the nav (1000)
+    flex-shrink: 0;
 
     display: flex;
     justify-content: center;
     align-items: center;
     gap: clamp(1.5rem, 6vw, 4rem);
 
-    padding: 12px var(--gutter);
+    // center the links within the area right of the nav rail
+    padding: 22px var(--gutter) 22px calc(var(--rail) + var(--gutter));
     background: white;
     border-top: 3px solid black;
     text-align: center;
@@ -26,7 +23,8 @@
 
 @media (max-width: 650px) {
     .site-footer {
-        left: 0; // mobile nav sits along the bottom, not the side
-        bottom: var(--mobile-nav-h);
+        // nav sits along the bottom on mobile — keep the links above it
+        padding: 22px var(--gutter);
+        margin-bottom: var(--mobile-nav-h);
     }
 }

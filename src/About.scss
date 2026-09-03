@@ -1,8 +1,8 @@
 .about-page {
-    position: absolute;
-    left: var(--content-x);
+    margin-left: var(--content-x);
+    padding-top: 24px;
     padding-right: var(--gutter);
-    padding-bottom: var(--nav-safe);
+    padding-bottom: 3rem;
     font-family: "Major Mono Display", monospace;
 }
 

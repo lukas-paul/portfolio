@@ -4,10 +4,7 @@
     --gutter: 24px;
     --content-x: calc(var(--rail) + var(--gutter));
     --measure: 68ch;
-    --footer-h: 48px; // approximate height of the fixed footer
     --mobile-nav-h: 80px; // height of the bottom nav bar on mobile
-    // bottom padding pages need so content clears the fixed footer (+ mobile nav)
-    --nav-safe: calc(var(--footer-h) + 24px);
 
     // type scale
     --fs-100: 0.75rem; // 12
@@ -22,6 +19,18 @@
 
 * {
     text-decoration: none;
+}
+
+// column layout so the (non-fixed) footer sits at the bottom of the
+// content — and at the bottom of the viewport on short pages
+#root {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+main,
+.about-page {
+    flex: 1 0 auto;
 }
 
 .nav-bar,
@@ -137,12 +146,10 @@ h2 {
 }
 
 .header {
-    position: absolute;
     color: black;
-    top: 15%;
-    left: var(--content-x);
+    margin: 15vh 0 0 var(--content-x);
     width: min(1100px, calc(100vw - var(--content-x) - var(--gutter)));
-    padding-bottom: calc(120px + var(--footer-h));
+    padding-bottom: clamp(3rem, 10vh, 6rem);
     display: flex;
     flex-direction: column;
     gap: clamp(4rem, 14vh, 9rem);
@@ -157,11 +164,7 @@ h2 {
     margin: 0px;
 }
 .short-info {
-    padding-top: 10px;
-    padding-bottom: 10px;
     width: 100%;
-    border-top: 3px black solid;
-    border-bottom: 3px black solid;
     .container {
         max-width: var(--measure);
     }
@@ -175,17 +178,15 @@ h2 {
 }
 
 .sub-page-content {
-    position: absolute;
-    left: var(--content-x);
+    margin-left: var(--content-x);
+    padding-top: 24px;
     padding-right: var(--gutter);
-    padding-bottom: var(--nav-safe);
+    padding-bottom: 3rem;
 }
 
 @media (max-width: 650px) {
     :root {
         --content-x: 16px;
-        // content must also clear the bottom nav bar on mobile
-        --nav-safe: calc(var(--footer-h) + var(--mobile-nav-h) + 24px);
     }
     .nav-bar {
         flex-direction: row;
@@ -200,7 +201,7 @@ h2 {
     }
 
     .header {
-        top: 12%;
+        margin-top: 12vh;
     }
     .animate {
         top: 10px;
