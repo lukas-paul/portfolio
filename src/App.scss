@@ -68,16 +68,19 @@ h2 {
         background-color: black;
         color: white;
     }
+    $home-icon-dark: "data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20width='26'%20height='26'%3E%3Cpath%20fill='black'%20d='M12%203%202%2012h3v9h6v-6h2v6h6v-9h3z'/%3E%3C/svg%3E";
+    $home-icon-light: "data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20width='26'%20height='26'%3E%3Cpath%20fill='white'%20d='M12%203%202%2012h3v9h6v-6h2v6h6v-9h3z'/%3E%3C/svg%3E";
     .home-button {
-        background: center no-repeat;
-        background-image: url("https://img.icons8.com/pix/32/undefined/experimental-home-pix.png");
+        background: white center no-repeat;
+        background-image: url("#{$home-icon-dark}");
     }
     .home-button:hover {
-        background-image: url("./icon/home-icon.png");
+        background-color: black;
+        background-image: url("#{$home-icon-light}");
     }
     .active-home-button {
         background: black center no-repeat;
-        background-image: url("./icon/home-icon.png");
+        background-image: url("#{$home-icon-light}");
     }
 }
 
