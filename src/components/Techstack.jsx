@@ -3,10 +3,10 @@ import "../Techstack.scss"
 
 export default function Home() {
     return (
-        <div className="short-info">
+        <div className="short-info techstack">
             <div className="container">
                 <h2 className="headline">Tech Stack</h2>
-                <div className="flex-row">
+                <div className="stack-columns">
                     <div className="substack">
                         <h3>Style, Structure, Animation</h3>
                         <div className="flex-row">
