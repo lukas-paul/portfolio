@@ -7,9 +7,35 @@ export default defineType({
     fields: [
         defineField({
             name: "intro",
-            title: "Intro paragraph",
-            type: "text",
-            rows: 3,
+            title: "Intro",
+            type: "array",
+            of: [
+                defineArrayMember({
+                    type: "block",
+                    styles: [{title: "Normal", value: "normal"}],
+                    lists: [],
+                    marks: {
+                        decorators: [
+                            {title: "Bold", value: "strong"},
+                            {title: "Italic", value: "em"},
+                        ],
+                        annotations: [
+                            {
+                                name: "link",
+                                type: "object",
+                                title: "Link",
+                                fields: [
+                                    {
+                                        name: "href",
+                                        type: "url",
+                                        title: "URL",
+                                    },
+                                ],
+                            },
+                        ],
+                    },
+                }),
+            ],
         }),
         defineField({
             name: "techStackHeading",

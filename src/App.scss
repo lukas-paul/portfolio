@@ -226,6 +226,13 @@ h3.headline {
     line-height: 1.5;
     .container {
         max-width: var(--measure);
+
+        p {
+            margin: 0 0 0.7em;
+        }
+        p:last-child {
+            margin-bottom: 0;
+        }
     }
 }
 

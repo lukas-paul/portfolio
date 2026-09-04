@@ -2,23 +2,8 @@ import React from "react";
 import { PortableText } from "@portabletext/react";
 import { useSanity } from "../sanity/useSanity.js";
 import { aboutQuery } from "../sanity/queries.js";
+import { portableTextComponents } from "../sanity/portableText.jsx";
 import "../About.scss";
-
-const portableTextComponents = {
-    types: {
-        image: ({ value }) =>
-            value?.asset?.url ? (
-                <img src={value.asset.url} alt={value.alt || ""} />
-            ) : null,
-    },
-    marks: {
-        link: ({ value, children }) => (
-            <a href={value?.href} target="_blank" rel="noopener noreferrer">
-                {children}
-            </a>
-        ),
-    },
-};
 
 export default function About() {
     const { data } = useSanity(aboutQuery);
