@@ -55,6 +55,22 @@ section {
                 height: auto;
                 display: block;
             }
+
+            // "tap / hover for details" affordance, over the image
+            .image-hint {
+                position: absolute;
+                right: 10px;
+                bottom: 10px;
+                padding: 5px 11px;
+                border-radius: 999px;
+                background: rgba(0, 0, 0, 0.62);
+                backdrop-filter: blur(4px);
+                -webkit-backdrop-filter: blur(4px);
+                color: #fff;
+                font-size: var(--fs-100);
+                letter-spacing: 0.03em;
+                pointer-events: none;
+            }
         }
 
         .desc-container {
@@ -131,5 +147,11 @@ section {
     }
     .project {
         width: 100%;
+    }
+    .image-hint {
+        right: 8px;
+        bottom: 8px;
+        font-size: var(--fs-200);
+        padding: 6px 12px;
     }
 }

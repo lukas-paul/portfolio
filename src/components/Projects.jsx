@@ -59,6 +59,14 @@ export default function Projects({ mobile }) {
                                                 alt={project.mainImage?.alt || ""}
                                             />
                                         </button>
+                                        {showOverlay !== index && (
+                                            <span
+                                                className="image-hint"
+                                                aria-hidden="true"
+                                            >
+                                                + Details
+                                            </span>
+                                        )}
                                         {showOverlay === index && (
                                             <div
                                                 className="mobile-overlay"
@@ -72,23 +80,22 @@ export default function Projects({ mobile }) {
                                                 <div className="mobile-overlay-left">
                                                     <div className="overlay-text">
                                                         <h1>{project.title}</h1>
-                                                        <div>
-                                                            {project.date && (
-                                                                <p>
-                                                                    {new Date(
-                                                                        project.date
-                                                                    ).toLocaleDateString()}
-                                                                </p>
-                                                            )}
-                                                            {project.projectType && (
-                                                                <p>
-                                                                    Type:{" "}
-                                                                    {
-                                                                        project.projectType
-                                                                    }
-                                                                </p>
-                                                            )}
-                                                        </div>
+                                                        {(project.date ||
+                                                            project.projectType) && (
+                                                            <p className="overlay-meta">
+                                                                {[
+                                                                    project.date &&
+                                                                        new Date(
+                                                                            project.date
+                                                                        ).getFullYear(),
+                                                                    project.projectType,
+                                                                ]
+                                                                    .filter(
+                                                                        Boolean
+                                                                    )
+                                                                    .join(" · ")}
+                                                            </p>
+                                                        )}
                                                         <div className="tags">
                                                             {(
                                                                 project.tags || []
