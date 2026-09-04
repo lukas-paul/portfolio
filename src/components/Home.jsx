@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useState } from "react";
+import React, { lazy, Suspense, useEffect, useState } from "react";
 import { PortableText } from "@portabletext/react";
 import Techstack from "./Techstack";
 import Seo from "./Seo";
@@ -18,6 +18,21 @@ export default function Home(prop) {
     const home = data?.home;
 
     const [animateVal, setAnimateVal] = useState("On");
+
+    // React.lazy starts fetching the Canvas chunk (~240KB of p5) the moment
+    // it's about to render, which by default is immediately on mount —
+    // right when the page's own text/fonts are competing for bandwidth.
+    // Hold the mount until the browser is idle (i.e. after first paint) so
+    // the heavy download doesn't delay LCP; it still starts within a beat
+    // of load, so the animation still feels immediate to the user.
+    const [canvasReady, setCanvasReady] = useState(false);
+    useEffect(() => {
+        const idle = window.requestIdleCallback || ((cb) => setTimeout(cb, 200));
+        const cancelIdle = window.cancelIdleCallback || clearTimeout;
+        const id = idle(() => setCanvasReady(true));
+        return () => cancelIdle(id);
+    }, []);
+
     const switchAnimate = () => {
         if (animateVal === "On") {
             setAnimateVal("Off");
@@ -57,7 +72,7 @@ export default function Home(prop) {
                     groups={home?.techGroups}
                 />
             </div>
-            {animateVal && animateVal === "On" && (
+            {canvasReady && animateVal && animateVal === "On" && (
                 <div className="canvas-parent">
                     <Suspense fallback={null}>
                         <Canvas prop={mobile.prop} />
