@@ -7,6 +7,7 @@ const prefersReducedMotion = () =>
  * Mild scroll atmosphere for the projects list:
  *  - each project fades in once as it enters the viewport
  *  - each project's media/text block drifts a few px against the scroll
+ *  - the page heading lingers slightly (~0.9x scroll speed)
  * Fully disabled under prefers-reduced-motion (everything shown, static).
  */
 export function useProjectScroll(containerRef, deps = []) {
@@ -15,6 +16,7 @@ export function useProjectScroll(containerRef, deps = []) {
         if (!root) return;
         const projects = Array.from(root.querySelectorAll(".project"));
         if (!projects.length) return;
+        const heading = document.querySelector(".sub-page-content .headline");
 
         if (prefersReducedMotion()) {
             projects.forEach((p) => p.classList.add("is-visible"));
@@ -48,6 +50,14 @@ export function useProjectScroll(containerRef, deps = []) {
                 const offset =
                     Math.max(-1, Math.min(1, 0.5 - t)) * AMPLITUDE;
                 p.style.setProperty("--parallax", `${offset.toFixed(1)}px`);
+            }
+            if (heading) {
+                // heading lags the scroll a touch, then parks once it's gone
+                const shift = Math.min(window.scrollY * 0.12, 48);
+                heading.style.setProperty(
+                    "--heading-shift",
+                    `${shift.toFixed(1)}px`
+                );
             }
         };
         const onScroll = () => {

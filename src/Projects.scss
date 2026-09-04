@@ -85,6 +85,12 @@ section {
     pointer-events: none;
 }
 
+// heading lingers a touch behind the scroll (JS sets --heading-shift)
+.sub-page-content .headline {
+    transform: translateY(var(--heading-shift, 0px));
+    will-change: transform;
+}
+
 @media (prefers-reduced-motion: reduce) {
     .project,
     .project.is-visible {
@@ -92,7 +98,8 @@ section {
         transform: none;
         transition: none;
     }
-    .project .image-text-section {
+    .project .image-text-section,
+    .sub-page-content .headline {
         transform: none;
     }
 }
