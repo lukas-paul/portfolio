@@ -24,7 +24,7 @@ export default function Projects({ mobile }) {
             <section>
                 <h1 className="headline">{page?.title || "Projects"}</h1>
                 {page?.intro && <p className="projects-intro">{page.intro}</p>}
-                <section>
+                <section className="project-list">
                     {projectData &&
                         projectData.map((project, index) => (
                             <article className="project" key={project._id}>
