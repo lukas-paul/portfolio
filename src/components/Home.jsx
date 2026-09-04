@@ -1,10 +1,14 @@
-import React, { useState } from "react";
+import React, { lazy, Suspense, useState } from "react";
 import { PortableText } from "@portabletext/react";
-import Canvas from "./Canvas";
 import Techstack from "./Techstack";
+import Seo from "./Seo";
 import { useSanity } from "../sanity/useSanity.js";
 import { homeQuery } from "../sanity/queries.js";
 import { portableTextComponents } from "../sanity/portableText.jsx";
+
+// p5 is a big dependency and only ever needed on this page — keep it out of
+// every other route's bundle.
+const Canvas = lazy(() => import("./Canvas"));
 
 export default function Home(prop) {
     let mobile = prop;
@@ -24,6 +28,7 @@ export default function Home(prop) {
     };
     return (
         <main>
+            <Seo />
             <button
                 type="button"
                 className="animate"
@@ -54,7 +59,9 @@ export default function Home(prop) {
             </div>
             {animateVal && animateVal === "On" && (
                 <div className="canvas-parent">
-                    <Canvas prop={mobile.prop} />
+                    <Suspense fallback={null}>
+                        <Canvas prop={mobile.prop} />
+                    </Suspense>
                 </div>
             )}
         </main>

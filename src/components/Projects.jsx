@@ -1,7 +1,9 @@
 import React, { useRef, useState } from "react";
+import Seo from "./Seo";
 import { useSanity } from "../sanity/useSanity.js";
 import { projectsQuery } from "../sanity/queries.js";
 import { useProjectScroll } from "../hooks/useProjectScroll.js";
+import { sizedImage } from "../sanity/image.js";
 import "../Projects.scss";
 import "../ProjectsMobile.scss";
 
@@ -25,6 +27,7 @@ export default function Projects({ mobile }) {
     };
     return (
         <main className="sub-page-content">
+            <Seo title={page?.title || "Projects"} />
             <section>
                 <h1 className="headline">{page?.title || "Projects"}</h1>
                 {page?.intro && <p className="projects-intro">{page.intro}</p>}
@@ -55,7 +58,10 @@ export default function Projects({ mobile }) {
                                             aria-label={`Details for ${project.title}`}
                                         >
                                             <img
-                                                src={project.mainImage?.url}
+                                                src={sizedImage(
+                                                    project.mainImage?.url,
+                                                    { width: 1280 }
+                                                )}
                                                 alt={project.mainImage?.alt || ""}
                                             />
                                         </button>

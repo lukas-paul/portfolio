@@ -1,8 +1,10 @@
 import React from "react";
 import { PortableText } from "@portabletext/react";
+import Seo from "./Seo";
 import { useSanity } from "../sanity/useSanity.js";
 import { aboutQuery } from "../sanity/queries.js";
 import { portableTextComponents } from "../sanity/portableText.jsx";
+import { sizedImage } from "../sanity/image.js";
 import "../About.scss";
 
 export default function About() {
@@ -10,6 +12,7 @@ export default function About() {
 
     return (
         <div className="about-page">
+            <Seo title={data?.title || "About"} />
             <div className="title">
                 <h1 className="headline">{data?.title || "About"}</h1>
             </div>
@@ -17,7 +20,12 @@ export default function About() {
                 <div className="about-text-container">
                     {data.profileImage && (
                         <div className="profile-image">
-                            <img src={data.profileImage} alt="Lukas Frenzer" />
+                            <img
+                                src={sizedImage(data.profileImage, {
+                                    width: 400,
+                                })}
+                                alt="Lukas Frenzer"
+                            />
                         </div>
                     )}
                     <PortableText

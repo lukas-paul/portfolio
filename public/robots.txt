@@ -1,3 +1,5 @@
 # https://www.robotstxt.org/robotstxt.html
 User-agent: *
-Disallow:
+Disallow: /studio
+
+Sitemap: https://lukas-frenzer.netlify.app/sitemap.xml
