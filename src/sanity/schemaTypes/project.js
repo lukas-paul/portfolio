@@ -21,7 +21,7 @@ export default defineType({
             options: {
                 list: [
                     {value: "personal", title: "Personal"},
-                    {value: "client", title: "Client"},
+                    {value: "professional", title: "Professional"},
                     {value: "school", title: "School"},
                 ],
             },
