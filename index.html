@@ -6,29 +6,21 @@
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content="#000000" />
         <link rel="manifest" href="/manifest.json" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <!-- Sanity is queried as soon as the app boots — warm up the
              connection in parallel with JS parsing instead of only
              starting the handshake once fetch() actually runs. -->
         <link rel="preconnect" href="https://lyh3u1ah.apicdn.sanity.io" crossorigin />
         <link rel="preconnect" href="https://cdn.sanity.io" crossorigin />
-        <!-- Load non-blocking: the font stylesheet would otherwise delay
-             first paint for a round trip. media="print" makes the browser
-             fetch it without it qualifying as render-blocking, then the
-             onload flips it to screen once it's in. -->
+        <!-- Self-hosted font (see index.css) — preload the file used by
+             Latin text so headings using it don't wait on discovering the
+             @font-face rule via the CSS cascade first. -->
         <link
-            rel="stylesheet"
-            href="https://fonts.googleapis.com/css2?family=Major+Mono+Display&display=swap"
-            media="print"
-            onload="this.media='all'"
+            rel="preload"
+            href="/fonts/major-mono-display-latin.woff2"
+            as="font"
+            type="font/woff2"
+            crossorigin
         />
-        <noscript>
-            <link
-                rel="stylesheet"
-                href="https://fonts.googleapis.com/css2?family=Major+Mono+Display&display=swap"
-            />
-        </noscript>
         <!-- Baseline metadata for first paint / non-JS crawlers.
              Seo.jsx overrides these from Sanity siteSettings at runtime. -->
         <title>Lukas Frenzer</title>
