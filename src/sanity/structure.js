@@ -30,8 +30,4 @@ export const structure = (S) =>
             S.divider(),
             S.documentTypeListItem("project").title("Projects"),
             S.documentTypeListItem("techSkill").title("Tech Skills"),
-            S.divider(),
-            S.documentTypeListItem("post").title("Posts (legacy)"),
-            S.documentTypeListItem("category").title("Categories (legacy)"),
-            S.documentTypeListItem("author").title("Authors (legacy)"),
         ]);
