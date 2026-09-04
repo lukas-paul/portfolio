@@ -5,16 +5,31 @@ section {
 }
 
 .project-list {
-    gap: clamp(3.5rem, 9vw, 7rem);
+    gap: clamp(4rem, 10vw, 8rem);
 }
 
 .project {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    width: min(100%, 900px);
+    display: grid;
+    grid-template-columns: minmax(0, 640px) 1fr;
+    column-gap: clamp(1.5rem, 5vw, 4rem);
+    width: min(100%, 1040px);
+
+    // gentle one-time entrance
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.55s ease, transform 0.55s ease;
+    &.is-visible {
+        opacity: 1;
+        transform: none;
+    }
 
     .image-text-section {
+        grid-column: 1;
+        min-width: 0;
+        // very mild parallax drift, against the scroll (JS sets --parallax)
+        transform: translateY(var(--parallax, 0px));
+        will-change: transform;
+
         .image-section {
             position: relative;
             width: min(100%, 640px);
@@ -52,6 +67,42 @@ section {
                 line-height: 1.55;
             }
         }
+    }
+}
+
+// oversized, near-invisible chapter marker in the right-hand dead space
+.project-index {
+    grid-column: 2;
+    grid-row: 1;
+    align-self: start;
+    position: sticky;
+    top: 12vh;
+    font-family: "Major Mono Display", monospace;
+    font-size: clamp(3rem, 9vw, 7.5rem);
+    line-height: 1;
+    color: #e7e7e7;
+    user-select: none;
+    pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .project,
+    .project.is-visible {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
+    .project .image-text-section {
+        transform: none;
+    }
+}
+
+@media (max-width: 900px) {
+    .project {
+        grid-template-columns: 1fr;
+    }
+    .project-index {
+        display: none;
     }
 }
 
