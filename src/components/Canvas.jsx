@@ -18,6 +18,8 @@ export default function Home(prop) {
         radiusMax: 100,
         delta: 0,
         deltaMobile: 0,
+        lastColorAt: 0,
+        lastTouchY: null,
     });
 
     // react-p5 lets setup() capture the window size just once, at mount. When
@@ -103,28 +105,64 @@ export default function Home(prop) {
         p5.resizeCanvas(window.innerWidth, window.innerHeight);
     };
 
+    // Scrolling changes the bubble colour. Two guards stop it from flashing:
+    //  - ignore input at a scroll edge (rubber-banding keeps firing wheel/
+    //    touch events even though the page can't move)
+    //  - never recolour more than ~5x/second
+    const randomiseColour = (p5) => {
+        const s = state.current;
+        const now = performance.now();
+        if (now - s.lastColorAt < 200) return;
+        s.lastColorAt = now;
+        s.bubbleColor.r = p5.random(200, 250);
+        s.bubbleColor.g = p5.random(200, 250);
+        s.bubbleColor.b = p5.random(200, 250);
+    };
+
+    const scrollBlockedAtEdge = (direction) => {
+        const y = window.scrollY;
+        const max =
+            document.documentElement.scrollHeight - window.innerHeight;
+        return (
+            (direction < 0 && y <= 0) || (direction > 0 && y >= max - 1)
+        );
+    };
+
     const mouseWheel = (p5, event) => {
         const s = state.current;
+        if (scrollBlockedAtEdge(event.delta)) {
+            s.delta = 0;
+            return;
+        }
         s.delta += event.delta;
-        if (s.delta >= 130 || s.delta <= -130) {
-            s.bubbleColor.r = p5.random(200, 250);
-            s.bubbleColor.g = p5.random(200, 250);
-            s.bubbleColor.b = p5.random(200, 250);
+        if (Math.abs(s.delta) >= 130) {
+            randomiseColour(p5);
             s.delta = 0;
         }
     };
 
     const touchMoved = (p5, event) => {
         const s = state.current;
-        if (mobile.prop) {
-            s.deltaMobile += event.targetTouches[0].screenY;
-            if (s.deltaMobile >= 7000 || s.deltaMobile <= -7000) {
-                s.bubbleColor.r = p5.random(200, 250);
-                s.bubbleColor.g = p5.random(200, 250);
-                s.bubbleColor.b = p5.random(200, 250);
-                s.deltaMobile = 0;
+        if (!mobile.prop) return;
+        const y =
+            event.touches?.[0]?.screenY ??
+            event.targetTouches?.[0]?.screenY;
+        if (y == null) return;
+        if (s.lastTouchY != null) {
+            const move = s.lastTouchY - y; // >0 = swiping toward page bottom
+            if (!scrollBlockedAtEdge(move)) {
+                s.deltaMobile += Math.abs(move);
+                if (s.deltaMobile >= 600) {
+                    randomiseColour(p5);
+                    s.deltaMobile = 0;
+                }
             }
-        } else return;
+        }
+        s.lastTouchY = y;
+    };
+
+    const touchEnded = () => {
+        state.current.lastTouchY = null;
     };
 
     return (
@@ -134,6 +172,7 @@ export default function Home(prop) {
             windowResized={windowResized}
             mouseWheel={mouseWheel}
             touchMoved={touchMoved}
+            touchEnded={touchEnded}
         />
     );
 }
