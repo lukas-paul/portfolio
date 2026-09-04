@@ -2,4 +2,4 @@
 User-agent: *
 Disallow: /studio
 
-Sitemap: https://lukas-frenzer.netlify.app/sitemap.xml
+Sitemap: https://lukasfrenzer.com/sitemap.xml
