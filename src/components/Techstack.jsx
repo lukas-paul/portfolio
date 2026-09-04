@@ -1,105 +1,53 @@
 import React from "react";
-import "../Techstack.scss"
+import "../Techstack.scss";
 
-export default function Home() {
+function Skill({ skill }) {
+    const inner = (
+        <>
+            <p>{skill.name}</p>
+            {skill.icon && (
+                <img
+                    className="stack-icon"
+                    src={skill.icon}
+                    alt={skill.name}
+                    width="48"
+                    height="48"
+                    loading="lazy"
+                />
+            )}
+        </>
+    );
+    return (
+        <div className="stack-icon-container">
+            {skill.url ? (
+                <a href={skill.url} target="_blank" rel="noopener noreferrer">
+                    {inner}
+                </a>
+            ) : (
+                inner
+            )}
+        </div>
+    );
+}
+
+export default function Techstack({ heading, groups }) {
+    if (!groups?.length) return null;
+
     return (
         <div className="short-info techstack">
             <div className="container">
-                <h2 className="headline">Tech Stack</h2>
+                <h2 className="headline">{heading || "Tech Stack"}</h2>
                 <div className="stack-columns">
-                    <div className="substack">
-                        <h3>Style, Structure, Animation</h3>
-                        <div className="flex-row">
-                            <div className="stack-icon-container">
-                                <p>HTML5</p>
-                                <img
-                                    src="https://img.icons8.com/ios-filled/48/undefined/html-5--v1.png"
-                                    alt="html5"
-                                />
-                            </div>
-                            <div className="stack-icon-container">
-                                <p>CSS3</p>
-                                <img
-                                    src="https://img.icons8.com/ios-filled/48/undefined/css3.png"
-                                    alt="css"
-                                />
-                            </div>
-                            <div className="stack-icon-container">
-                                <p>Sass</p>
-                                <img
-                                    src="https://img.icons8.com/material-outlined/48/undefined/sass.png"
-                                    alt="sass"
-                                />
-                            </div>
-                            <div className="stack-icon-container">
-                                <p>p5.js</p>
-                                <div className="stack-icon p5"></div>
+                    {groups.map((group) => (
+                        <div className="substack" key={group._key}>
+                            <h3>{group.heading}</h3>
+                            <div className="flex-row">
+                                {(group.skills || []).map((skill) => (
+                                    <Skill key={skill._id} skill={skill} />
+                                ))}
                             </div>
                         </div>
-                    </div>
-                    <div className="substack">
-                        <h3>Language, Library, Framework</h3>
-                        <div className="flex-row">
-                            <div className="stack-icon-container">
-                                <p>JavaScript</p>
-                                <img
-                                    src="https://img.icons8.com/ios-filled/48/undefined/javascript-logo.png"
-                                    alt="javascript"
-                                />
-                            </div>
-                            <div className="stack-icon-container">
-                                <p>React</p>
-                                <img
-                                    src="https://img.icons8.com/dotty/48/undefined/react.png"
-                                    alt="react"
-                                />
-                            </div>
-                            <div className="stack-icon-container">
-                                <p>Svelte</p>
-                                <img
-                                    src="https://img.icons8.com/wired/48/undefined/svetle.png"
-                                    alt="svelte"
-                                />
-                            </div>
-                            <div className="stack-icon-container">
-                                <p>Vue</p>
-                                <img
-                                    src="https://img.icons8.com/windows/48/undefined/vuejs.png"
-                                    alt="vue"
-                                />
-                            </div>
-                            <div className="stack-icon-container">
-                                <p>TypeScript</p>
-                                <img
-                                    src="https://img.icons8.com/ios-filled/48/undefined/typescript.png"
-                                    alt="typescript"
-                                />
-                            </div>
-                        </div>
-                    </div>
-                    <div className="substack">
-                        <h3>Backend Technology</h3>
-                        <div className="flex-row">
-                            <div className="stack-icon-container">
-                                <p>Nodejs</p>
-                                <img
-                                    src="https://img.icons8.com/windows/48/undefined/nodejs.png"
-                                    alt="nodejs"
-                                />
-                            </div>
-                            <div className="stack-icon-container">
-                                <p>Postgres</p>
-                                <img
-                                    src="https://img.icons8.com/ios-filled/50/undefined/postgreesql.png"
-                                    alt="postgres"
-                                />
-                            </div>
-                            <div className="stack-icon-container">
-                                <p>Socket.io</p>
-                                <div className="stack-icon socket"></div>
-                            </div>
-                        </div>
-                    </div>
+                    ))}
                 </div>
             </div>
         </div>

@@ -10,6 +10,7 @@ import About from "./components/About";
 import Projects from "./components/Projects";
 import NavBar from "./components/NavBar";
 import Footer from "./components/Footer";
+import Seo from "./components/Seo";
 import "./App.scss";
 
 // Sanity Studio is a heavy dependency — only load it on /studio
@@ -35,6 +36,7 @@ function AppShell() {
 
     return (
         <>
+            <Seo />
             <NavBar />
             <Routes>
                 <Route element={<Home prop={mobile} />} path="/" exact />

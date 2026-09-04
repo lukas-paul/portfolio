@@ -1,23 +1,15 @@
-import React, { useEffect, useState } from "react";
-import sanityClient from "../client.js";
+import React, { useState } from "react";
+import { useSanity } from "../sanity/useSanity.js";
+import { projectsQuery } from "../sanity/queries.js";
 import "../Projects.scss";
 import "../ProjectsMobile.scss";
 
 export default function Projects({ mobile }) {
-    const [projectData, setProjectData] = useState(null);
+    const { data } = useSanity(projectsQuery);
+    const page = data?.page;
+    const projectData = data?.projects;
+
     const [showOverlay, setShowOverlay] = useState(false);
-    useEffect(() => {
-        sanityClient
-            .fetch(
-                `*[_type == "project"]{
-            title, mainImage{asset->{_id,url},alt}, date, description, projectType,link, tags
-        }`
-            )
-            .then((data) => {
-                setProjectData(data);
-            })
-            .catch(console.error);
-    }, []);
     const openOverlay = (index) => {
         setShowOverlay(index);
     };
@@ -30,11 +22,12 @@ export default function Projects({ mobile }) {
     return (
         <main className="sub-page-content">
             <section>
-                <h1 className="headline">Projects</h1>
+                <h1 className="headline">{page?.title || "Projects"}</h1>
+                {page?.intro && <p className="projects-intro">{page.intro}</p>}
                 <section>
                     {projectData &&
                         projectData.map((project, index) => (
-                            <article className="project" key={index}>
+                            <article className="project" key={project._id}>
                                 <div className="image-text-section">
                                     <div className="image-section">
                                         <button
@@ -50,12 +43,8 @@ export default function Projects({ mobile }) {
                                             aria-label={`Details for ${project.title}`}
                                         >
                                             <img
-                                                src={
-                                                    project.mainImage.asset.url
-                                                }
-                                                alt={
-                                                    project.mainImage.alt || ""
-                                                }
+                                                src={project.mainImage?.url}
+                                                alt={project.mainImage?.alt || ""}
                                             />
                                         </button>
                                         {showOverlay === index && (
@@ -72,36 +61,33 @@ export default function Projects({ mobile }) {
                                                     <div className="overlay-text">
                                                         <h1>{project.title}</h1>
                                                         <div>
-                                                            <p>
-                                                                {new Date(
-                                                                    project.date
-                                                                ).toLocaleDateString()}
-                                                            </p>
-                                                            <p>
-                                                                Type:{" "}
-                                                                {
-                                                                    project.projectType
-                                                                }
-                                                            </p>
+                                                            {project.date && (
+                                                                <p>
+                                                                    {new Date(
+                                                                        project.date
+                                                                    ).toLocaleDateString()}
+                                                                </p>
+                                                            )}
+                                                            {project.projectType && (
+                                                                <p>
+                                                                    Type:{" "}
+                                                                    {
+                                                                        project.projectType
+                                                                    }
+                                                                </p>
+                                                            )}
                                                         </div>
                                                         <div className="tags">
-                                                            {projectData[
-                                                                index
-                                                            ].tags.map(
-                                                                (
-                                                                    tag,
-                                                                    index
-                                                                ) => (
-                                                                    <p
-                                                                        className="tag"
-                                                                        key={
-                                                                            index
-                                                                        }
-                                                                    >
-                                                                        {tag}
-                                                                    </p>
-                                                                )
-                                                            )}
+                                                            {(
+                                                                project.tags || []
+                                                            ).map((tag) => (
+                                                                <p
+                                                                    className="tag"
+                                                                    key={tag}
+                                                                >
+                                                                    {tag}
+                                                                </p>
+                                                            ))}
                                                         </div>
                                                     </div>
                                                 </div>
@@ -109,7 +95,6 @@ export default function Projects({ mobile }) {
                                                     {project.link && (
                                                         <a
                                                             href={project.link}
-                                                            alt={project.title}
                                                             target="_blank"
                                                             rel="noopener noreferrer"
                                                         >

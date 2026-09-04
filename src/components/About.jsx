@@ -1,38 +1,45 @@
-import React, { useEffect, useState } from "react";
-import sanityClient from "../client.js";
+import React from "react";
 import { PortableText } from "@portabletext/react";
+import { useSanity } from "../sanity/useSanity.js";
+import { aboutQuery } from "../sanity/queries.js";
 import "../About.scss";
 
+const portableTextComponents = {
+    types: {
+        image: ({ value }) =>
+            value?.asset?.url ? (
+                <img src={value.asset.url} alt={value.alt || ""} />
+            ) : null,
+    },
+    marks: {
+        link: ({ value, children }) => (
+            <a href={value?.href} target="_blank" rel="noopener noreferrer">
+                {children}
+            </a>
+        ),
+    },
+};
+
 export default function About() {
-    const [projectData, setProjectData] = useState(null);
-    useEffect(() => {
-        sanityClient 
-            .fetch(
-                `*[_type == "post"]{
-            body, mainImage{asset->{_id,url},alt},
-        }`
-            )
-            .then((data) => {
-                setProjectData(data[0]);
-            })
-            .catch(console.error);
-    }, []);
+    const { data } = useSanity(aboutQuery);
 
     return (
         <div className="about-page">
             <div className="title">
-                <h1 className="headline">About Page</h1>
+                <h1 className="headline">{data?.title || "About"}</h1>
             </div>
-            {projectData && (
-                    <div className="about-text-container">
+            {data && (
+                <div className="about-text-container">
+                    {data.profileImage && (
                         <div className="profile-image">
-                            <img
-                                src={projectData.mainImage.asset.url}
-                                alt="profile"
-                            />
+                            <img src={data.profileImage} alt="Lukas Frenzer" />
                         </div>
-                        <PortableText value={projectData.body} />
-                    </div>
+                    )}
+                    <PortableText
+                        value={data.body}
+                        components={portableTextComponents}
+                    />
+                </div>
             )}
         </div>
     );

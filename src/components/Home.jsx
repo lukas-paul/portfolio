@@ -1,9 +1,15 @@
 import React, { useState } from "react";
 import Canvas from "./Canvas";
 import Techstack from "./Techstack";
+import { useSanity } from "../sanity/useSanity.js";
+import { homeQuery } from "../sanity/queries.js";
 
 export default function Home(prop) {
     let mobile = prop;
+
+    const { data } = useSanity(homeQuery);
+    const settings = data?.settings;
+    const home = data?.home;
 
     const [animateVal, setAnimateVal] = useState("On");
     const switchAnimate = () => {
@@ -26,17 +32,18 @@ export default function Home(prop) {
             </button>
             <div className="header">
                 <div>
-                    <h1 className="headline">Lukas Frenzer</h1>
-                    <h2 className="headline">Web Development, Comedy, Writing.</h2>
+                    <h1 className="headline">{settings?.title}</h1>
+                    <h2 className="headline">{settings?.tagline}</h2>
                 </div>
-                <div className="short-info">
-                    <p className="container">
-                        I develop things for the Internet. I am a trained Full
-                        Stack Developer, meaning I am familiar with back- and
-                        front-end technologies.
-                    </p>
-                </div>
-                <Techstack />
+                {home?.intro && (
+                    <div className="short-info">
+                        <p className="container">{home.intro}</p>
+                    </div>
+                )}
+                <Techstack
+                    heading={home?.techStackHeading}
+                    groups={home?.techGroups}
+                />
             </div>
             {animateVal && animateVal === "On" && (
                 <div className="canvas-parent">
