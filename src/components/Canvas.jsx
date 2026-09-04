@@ -3,14 +3,22 @@ import Sketch from "react-p5";
 
 export default function Home(prop) {
     let mobile = prop;
-    let bubbles = [];
-    let bubbleColor = {
-        r: 255,
-        g: 200,
-        b: 200,
-    };
-    let radiusMin;
-    let radiusMax;
+
+    // Animation state has to survive re-renders. react-p5 reads the draw
+    // callback fresh from props on every frame, so when this component
+    // re-renders (e.g. a parent's data fetch resolving) p5 picks up a new
+    // closure over freshly-initialised locals — radiusMin/radiusMax become
+    // undefined, every new bubble gets a NaN radius, and the animation
+    // silently disappears. Keeping the mutable state in a ref means every
+    // closure shares the same values.
+    const state = useRef({
+        bubbles: [],
+        bubbleColor: { r: 255, g: 200, b: 200 },
+        radiusMin: 50,
+        radiusMax: 100,
+        delta: 0,
+        deltaMobile: 0,
+    });
 
     // react-p5 lets setup() capture the window size just once, at mount. When
     // this component remounts (navigating back from a taller route) a scrollbar
@@ -37,37 +45,44 @@ export default function Home(prop) {
 
     const setup = (p5, canvasParentRef) => {
         p5Ref.current = p5;
+        const s = state.current;
         let small = window.innerWidth < 650 ? true : false;
-        radiusMin = small ? 30 : 50;
-        radiusMax = small ? 50 : 100;
+        s.radiusMin = small ? 30 : 50;
+        s.radiusMax = small ? 50 : 100;
         p5.createCanvas(window.innerWidth, window.innerHeight).parent(
             canvasParentRef
         );
         p5.background(255);
 
-        bubbleColor.r = p5.random(200, 250);
-        bubbleColor.g = p5.random(200, 250);
-        bubbleColor.b = p5.random(200, 250);
+        s.bubbleColor.r = p5.random(200, 250);
+        s.bubbleColor.g = p5.random(200, 250);
+        s.bubbleColor.b = p5.random(200, 250);
         p5.frameRate(30);
     };
 
     const draw = (p5) => {
+        const s = state.current;
         p5.background("white");
-        for (var i = 0; i < bubbles.length; i++) {
-            let bubble = bubbles[i];
+        for (var i = 0; i < s.bubbles.length; i++) {
+            let bubble = s.bubbles[i];
 
             if (
                 p5.dist(p5.mouseX, p5.mouseY, bubble.x, bubble.y) <
                 bubble.radius
             ) {
                 if (p5.mouseIsPressed) {
-                    bubbles.splice(i, 1); // remove this bubble!
+                    s.bubbles.splice(i, 1); // remove this bubble!
                 }
-                p5.fill(bubbleColor.r, bubbleColor.g - 20, bubbleColor.b, 200);
+                p5.fill(
+                    s.bubbleColor.r,
+                    s.bubbleColor.g - 20,
+                    s.bubbleColor.b,
+                    200
+                );
             }
 
             p5.ellipse(bubble.x, bubble.y, bubble.radius * 2);
-            p5.fill(bubbleColor.r, bubbleColor.g, bubbleColor.b, 200);
+            p5.fill(s.bubbleColor.r, s.bubbleColor.g, s.bubbleColor.b, 200);
             bubble.x += p5.random(-1, 1);
             bubble.y += p5.random(-1, 1);
         }
@@ -75,11 +90,11 @@ export default function Home(prop) {
         let dot = {
             x: p5.random(p5.width),
             y: p5.random(p5.height),
-            radius: p5.random(radiusMin, radiusMax),
+            radius: p5.random(s.radiusMin, s.radiusMax),
         };
-        bubbles.push(dot);
-        if (bubbles.length > 200) {
-            bubbles = [];
+        s.bubbles.push(dot);
+        if (s.bubbles.length > 200) {
+            s.bubbles = [];
         }
         p5.noStroke();
     };
@@ -88,26 +103,26 @@ export default function Home(prop) {
         p5.resizeCanvas(window.innerWidth, window.innerHeight);
     };
 
-    let delta = 0;
     const mouseWheel = (p5, event) => {
-        delta += event.delta;
-        if (delta >= 130 || delta <= -130) {
-            bubbleColor.r = p5.random(200, 250);
-            bubbleColor.g = p5.random(200, 250);
-            bubbleColor.b = p5.random(200, 250);
-            delta = 0;
+        const s = state.current;
+        s.delta += event.delta;
+        if (s.delta >= 130 || s.delta <= -130) {
+            s.bubbleColor.r = p5.random(200, 250);
+            s.bubbleColor.g = p5.random(200, 250);
+            s.bubbleColor.b = p5.random(200, 250);
+            s.delta = 0;
         }
     };
 
-    let deltaMobile = 0;
     const touchMoved = (p5, event) => {
+        const s = state.current;
         if (mobile.prop) {
-            deltaMobile += event.targetTouches[0].screenY;
-            if (deltaMobile >= 7000 || deltaMobile <= -7000) {
-                bubbleColor.r = p5.random(200, 250);
-                bubbleColor.g = p5.random(200, 250);
-                bubbleColor.b = p5.random(200, 250);
-                deltaMobile = 0;
+            s.deltaMobile += event.targetTouches[0].screenY;
+            if (s.deltaMobile >= 7000 || s.deltaMobile <= -7000) {
+                s.bubbleColor.r = p5.random(200, 250);
+                s.bubbleColor.g = p5.random(200, 250);
+                s.bubbleColor.b = p5.random(200, 250);
+                s.deltaMobile = 0;
             }
         } else return;
     };
