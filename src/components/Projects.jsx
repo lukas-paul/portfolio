@@ -32,12 +32,14 @@ export default function Projects({ mobile }) {
                     {projectData &&
                         projectData.map((project, index) => (
                             <article className="project" key={project._id}>
-                                <span
-                                    className="project-index"
-                                    aria-hidden="true"
-                                >
-                                    {String(index + 1).padStart(2, "0")}
-                                </span>
+                                {project.date && (
+                                    <span
+                                        className="project-index"
+                                        aria-hidden="true"
+                                    >
+                                        {new Date(project.date).getFullYear()}
+                                    </span>
+                                )}
                                 <div className="image-text-section">
                                     <div className="image-section">
                                         <button
