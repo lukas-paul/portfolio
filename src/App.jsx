@@ -15,6 +15,7 @@ import "./App.scss";
 // page's code ships in the initial bundle unless it's actually visited.
 const About = lazy(() => import("./components/About"));
 const Projects = lazy(() => import("./components/Projects"));
+const Impressum = lazy(() => import("./components/Impressum"));
 
 // Sanity Studio is a heavy dependency — only load it on /studio
 const StudioRoute = lazy(() => import("./components/StudioRoute"));
@@ -48,6 +49,7 @@ function AppShell() {
                         element={<Projects mobile={mobile} />}
                         path="projects"
                     />
+                    <Route element={<Impressum />} path="impressum" />
                 </Routes>
             </Suspense>
             <Footer />

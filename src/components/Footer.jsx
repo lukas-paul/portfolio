@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { useSanity } from "../sanity/useSanity.js";
 import { socialsQuery } from "../sanity/queries.js";
 import "../Footer.scss";
@@ -23,6 +24,7 @@ export default function Footer() {
                     </a>
                 );
             })}
+            <Link to="/impressum">Impressum</Link>
         </footer>
     );
 }
