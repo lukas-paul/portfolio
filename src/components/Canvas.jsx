@@ -48,7 +48,7 @@ export default function Home() {
         mount.appendChild(renderer.domElement);
 
         const small = window.innerWidth < 650;
-        const geometry = new IcosahedronGeometry(small ? 1.9 : 2.1, 1);
+        const geometry = new IcosahedronGeometry(small ? 1.4 : 2.1, 1);
         const material = new MeshPhysicalMaterial({
             color: 0x9a9aa2,
             transparent: true,
@@ -107,11 +107,14 @@ export default function Home() {
             state.elapsed += dt;
 
             const scrollY = window.scrollY;
-            const scrollDelta = Math.abs(scrollY - state.lastScrollY);
+            const scrollDelta = scrollY - state.lastScrollY;
             state.lastScrollY = scrollY;
-            state.spinBoost = Math.min(
-                state.spinBoost + scrollDelta * BOOST_FROM_SCROLL,
-                MAX_BOOST
+            state.spinBoost = Math.max(
+                -MAX_BOOST,
+                Math.min(
+                    state.spinBoost + scrollDelta * BOOST_FROM_SCROLL,
+                    MAX_BOOST
+                )
             );
 
             const spin = IDLE_SPEED + state.spinBoost;
