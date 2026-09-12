@@ -31,6 +31,9 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: var(--bg, white);
+  color: var(--fg, black);
+  transition: background-color 0.15s ease, color 0.15s ease;
 }
 
 code {

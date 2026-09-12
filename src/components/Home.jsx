@@ -6,20 +6,24 @@ import { useSanity } from "../sanity/useSanity.js";
 import { homeQuery } from "../sanity/queries.js";
 import { portableTextComponents } from "../sanity/portableText.jsx";
 
-// p5 is a big dependency and only ever needed on this page — keep it out of
-// every other route's bundle.
+// three.js is a sizeable dependency and only ever needed on this page — keep
+// it out of every other route's bundle.
 const Canvas = lazy(() => import("./Canvas"));
 
-export default function Home(prop) {
-    let mobile = prop;
-
+export default function Home() {
     const { data } = useSanity(homeQuery);
     const settings = data?.settings;
     const home = data?.home;
 
-    const [animateVal, setAnimateVal] = useState("On");
+    const [darkMode, setDarkMode] = useState(
+        () => localStorage.getItem("theme") === "dark"
+    );
+    useEffect(() => {
+        document.documentElement.dataset.theme = darkMode ? "dark" : "light";
+        localStorage.setItem("theme", darkMode ? "dark" : "light");
+    }, [darkMode]);
 
-    // React.lazy starts fetching the Canvas chunk (~240KB of p5) the moment
+    // React.lazy starts fetching the Canvas chunk (three.js) the moment
     // it's about to render, which by default is immediately on mount —
     // right when the page's own text/fonts are competing for bandwidth.
     // Hold the mount until the browser is idle (i.e. after first paint) so
@@ -33,24 +37,16 @@ export default function Home(prop) {
         return () => cancelIdle(id);
     }, []);
 
-    const switchAnimate = () => {
-        if (animateVal === "On") {
-            setAnimateVal("Off");
-        }
-        if (animateVal === "Off") {
-            setAnimateVal("On");
-        }
-    };
     return (
         <main>
             <Seo />
             <button
                 type="button"
-                className="animate"
-                onClick={switchAnimate}
-                aria-pressed={animateVal === "On"}
+                className="theme-toggle"
+                onClick={() => setDarkMode((v) => !v)}
+                aria-pressed={darkMode}
             >
-                Animate: {animateVal}
+                Dark Mode: {darkMode ? "On" : "Off"}
             </button>
             <div className="header">
                 <div>
@@ -72,10 +68,10 @@ export default function Home(prop) {
                     groups={home?.techGroups}
                 />
             </div>
-            {canvasReady && animateVal && animateVal === "On" && (
+            {canvasReady && (
                 <div className="canvas-parent">
                     <Suspense fallback={null}>
-                        <Canvas prop={mobile.prop} />
+                        <Canvas darkMode={darkMode} />
                     </Suspense>
                 </div>
             )}

@@ -43,5 +43,13 @@
     width: 48px;
     height: 48px;
     object-fit: contain;
-    transition: opacity var(--ease);
+    transition: opacity var(--ease), filter var(--ease);
+}
+
+// the logos are fixed image assets in their own brand colors; flattening
+// every one to a white silhouette keeps them legible against the dark
+// background and matches the site's monochrome look, rather than only
+// patching up the ones that happen to already be drawn in plain black
+:root[data-theme="dark"] .stack-icon {
+    filter: brightness(0) invert(1);
 }
