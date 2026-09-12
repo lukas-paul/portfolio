@@ -43,16 +43,13 @@
     width: 48px;
     height: 48px;
     object-fit: contain;
-    transition: opacity var(--ease), background-color var(--ease);
+    transition: opacity var(--ease), filter var(--ease);
 }
 
-// the logos are fixed image assets — several are drawn in plain black for
-// a light page and would otherwise vanish against a dark one, so in dark
-// mode every icon sits on a small light card instead of reasoning about
-// which logos are monochrome and which already carry their own color
+// the logos are fixed image assets in their own brand colors; flattening
+// every one to a white silhouette keeps them legible against the dark
+// background and matches the site's monochrome look, rather than only
+// patching up the ones that happen to already be drawn in plain black
 :root[data-theme="dark"] .stack-icon {
-    background-color: white;
-    border-radius: 10px;
-    padding: 6px;
-    box-sizing: border-box;
+    filter: brightness(0) invert(1);
 }
