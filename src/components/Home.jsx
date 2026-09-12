@@ -6,20 +6,18 @@ import { useSanity } from "../sanity/useSanity.js";
 import { homeQuery } from "../sanity/queries.js";
 import { portableTextComponents } from "../sanity/portableText.jsx";
 
-// p5 is a big dependency and only ever needed on this page — keep it out of
-// every other route's bundle.
+// three.js is a sizeable dependency and only ever needed on this page — keep
+// it out of every other route's bundle.
 const Canvas = lazy(() => import("./Canvas"));
 
-export default function Home(prop) {
-    let mobile = prop;
-
+export default function Home() {
     const { data } = useSanity(homeQuery);
     const settings = data?.settings;
     const home = data?.home;
 
     const [animateVal, setAnimateVal] = useState("On");
 
-    // React.lazy starts fetching the Canvas chunk (~240KB of p5) the moment
+    // React.lazy starts fetching the Canvas chunk (three.js) the moment
     // it's about to render, which by default is immediately on mount —
     // right when the page's own text/fonts are competing for bandwidth.
     // Hold the mount until the browser is idle (i.e. after first paint) so
@@ -75,7 +73,7 @@ export default function Home(prop) {
             {canvasReady && animateVal && animateVal === "On" && (
                 <div className="canvas-parent">
                     <Suspense fallback={null}>
-                        <Canvas prop={mobile.prop} />
+                        <Canvas />
                     </Suspense>
                 </div>
             )}

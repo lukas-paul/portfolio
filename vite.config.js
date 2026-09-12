@@ -16,7 +16,4 @@ export default defineConfig({
             scss: { api: "modern" },
         },
     },
-    optimizeDeps: {
-        include: ["p5", "react-p5"],
-    },
 });

@@ -1,178 +1,164 @@
 import React, { useEffect, useRef } from "react";
-import Sketch from "react-p5";
+import {
+    Scene,
+    PerspectiveCamera,
+    WebGLRenderer,
+    IcosahedronGeometry,
+    MeshPhysicalMaterial,
+    Mesh,
+    EdgesGeometry,
+    LineBasicMaterial,
+    LineSegments,
+    AmbientLight,
+    DirectionalLight,
+    DoubleSide,
+} from "three";
 
-export default function Home(prop) {
-    let mobile = prop;
+// A slowly drifting, translucent monochrome faceted shape. Idle motion
+// wanders along a lazy Lissajous-style curve; scrolling (wheel, touch,
+// trackpad, keyboard — anything that moves window.scrollY) adds a
+// temporary spin boost that decays back to the idle drift.
+export default function Home() {
+    const mountRef = useRef(null);
 
-    // Animation state has to survive re-renders. react-p5 reads the draw
-    // callback fresh from props on every frame, so when this component
-    // re-renders (e.g. a parent's data fetch resolving) p5 picks up a new
-    // closure over freshly-initialised locals — radiusMin/radiusMax become
-    // undefined, every new bubble gets a NaN radius, and the animation
-    // silently disappears. Keeping the mutable state in a ref means every
-    // closure shares the same values.
-    const state = useRef({
-        bubbles: [],
-        bubbleColor: { r: 255, g: 200, b: 200 },
-        radiusMin: 50,
-        radiusMax: 100,
-        delta: 0,
-        deltaMobile: 0,
-        lastColorAt: 0,
-        lastTouchY: null,
-    });
-
-    // react-p5 lets setup() capture the window size just once, at mount. When
-    // this component remounts (navigating back from a taller route) a scrollbar
-    // may have appeared or vanished, changing window.innerWidth — and that never
-    // fires a `resize` event, so windowResized() below can't correct it and the
-    // canvas stays the wrong width. Re-sync it to the real viewport right after
-    // mount, and keep our own resize listener as a backup to p5's.
-    const p5Ref = useRef(null);
     useEffect(() => {
-        const syncSize = () =>
-            p5Ref.current?.resizeCanvas(
-                window.innerWidth,
-                window.innerHeight
+        const mount = mountRef.current;
+        if (!mount) return;
+
+        const reduceMotion = window.matchMedia(
+            "(prefers-reduced-motion: reduce)"
+        ).matches;
+
+        const scene = new Scene();
+        const camera = new PerspectiveCamera(
+            45,
+            window.innerWidth / window.innerHeight,
+            0.1,
+            100
+        );
+        camera.position.z = 7;
+
+        const renderer = new WebGLRenderer({
+            antialias: true,
+            alpha: true,
+        });
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.domElement.className = "bg-canvas";
+        mount.appendChild(renderer.domElement);
+
+        const small = window.innerWidth < 650;
+        const geometry = new IcosahedronGeometry(small ? 1.9 : 2.6, 1);
+        const material = new MeshPhysicalMaterial({
+            color: 0x9a9aa2,
+            transparent: true,
+            opacity: 0.32,
+            roughness: 0.35,
+            metalness: 0.05,
+            flatShading: true,
+            side: DoubleSide,
+            depthWrite: false,
+        });
+        const mesh = new Mesh(geometry, material);
+        scene.add(mesh);
+
+        // Faint edges to give the facets a bit of definition against a
+        // light background, since flat, low-opacity fill alone reads as
+        // a formless blob.
+        const edges = new LineSegments(
+            new EdgesGeometry(geometry),
+            new LineBasicMaterial({
+                color: 0x5c5c66,
+                transparent: true,
+                opacity: 0.45,
+            })
+        );
+        mesh.add(edges);
+
+        scene.add(new AmbientLight(0xffffff, 0.6));
+        const key = new DirectionalLight(0xffffff, 0.8);
+        key.position.set(4, 5, 6);
+        scene.add(key);
+        const fill = new DirectionalLight(0xffffff, 0.4);
+        fill.position.set(-5, -3, -4);
+        scene.add(fill);
+
+        const state = {
+            spinBoost: 0,
+            lastScrollY: window.scrollY,
+            elapsed: 0,
+            rafId: null,
+            lastTime: performance.now(),
+            visible: !document.hidden,
+        };
+
+        const IDLE_SPEED = reduceMotion ? 0 : 0.06;
+        const BOOST_DECAY = 0.94;
+        const BOOST_FROM_SCROLL = 0.00025;
+        const MAX_BOOST = reduceMotion ? 0 : 3.5;
+
+        const animate = (now) => {
+            state.rafId = requestAnimationFrame(animate);
+            if (!state.visible) return;
+
+            const dt = Math.min((now - state.lastTime) / 1000, 0.1);
+            state.lastTime = now;
+            state.elapsed += dt;
+
+            const scrollY = window.scrollY;
+            const scrollDelta = Math.abs(scrollY - state.lastScrollY);
+            state.lastScrollY = scrollY;
+            state.spinBoost = Math.min(
+                state.spinBoost + scrollDelta * BOOST_FROM_SCROLL,
+                MAX_BOOST
             );
-        const t1 = setTimeout(syncSize, 0);
-        const t2 = setTimeout(syncSize, 150);
-        window.addEventListener("resize", syncSize);
+
+            const spin = IDLE_SPEED + state.spinBoost;
+            mesh.rotation.y += spin * dt;
+            mesh.rotation.x += spin * 0.6 * dt;
+
+            if (!reduceMotion) {
+                // Lazy curved drift, independent of the scroll-driven spin.
+                mesh.position.x = Math.sin(state.elapsed * 0.15) * 0.7;
+                mesh.position.y = Math.cos(state.elapsed * 0.11) * 0.5;
+            }
+
+            state.spinBoost *= BOOST_DECAY;
+
+            renderer.render(scene, camera);
+        };
+        state.rafId = requestAnimationFrame(animate);
+
+        const handleResize = () => {
+            const w = window.innerWidth;
+            const h = window.innerHeight;
+            camera.aspect = w / h;
+            camera.updateProjectionMatrix();
+            renderer.setSize(w, h);
+        };
+        window.addEventListener("resize", handleResize);
+
+        const handleVisibility = () => {
+            state.visible = !document.hidden;
+            state.lastTime = performance.now();
+        };
+        document.addEventListener("visibilitychange", handleVisibility);
+
         return () => {
-            clearTimeout(t1);
-            clearTimeout(t2);
-            window.removeEventListener("resize", syncSize);
+            cancelAnimationFrame(state.rafId);
+            window.removeEventListener("resize", handleResize);
+            document.removeEventListener(
+                "visibilitychange",
+                handleVisibility
+            );
+            mount.removeChild(renderer.domElement);
+            geometry.dispose();
+            material.dispose();
+            edges.geometry.dispose();
+            edges.material.dispose();
+            renderer.dispose();
         };
     }, []);
 
-    const setup = (p5, canvasParentRef) => {
-        p5Ref.current = p5;
-        const s = state.current;
-        let small = window.innerWidth < 650 ? true : false;
-        s.radiusMin = small ? 30 : 50;
-        s.radiusMax = small ? 50 : 100;
-        p5.createCanvas(window.innerWidth, window.innerHeight).parent(
-            canvasParentRef
-        );
-        p5.background(255);
-
-        s.bubbleColor.r = p5.random(200, 250);
-        s.bubbleColor.g = p5.random(200, 250);
-        s.bubbleColor.b = p5.random(200, 250);
-        p5.frameRate(30);
-    };
-
-    const draw = (p5) => {
-        const s = state.current;
-        p5.background("white");
-        for (var i = 0; i < s.bubbles.length; i++) {
-            let bubble = s.bubbles[i];
-
-            if (
-                p5.dist(p5.mouseX, p5.mouseY, bubble.x, bubble.y) <
-                bubble.radius
-            ) {
-                if (p5.mouseIsPressed) {
-                    s.bubbles.splice(i, 1); // remove this bubble!
-                }
-                p5.fill(
-                    s.bubbleColor.r,
-                    s.bubbleColor.g - 20,
-                    s.bubbleColor.b,
-                    200
-                );
-            }
-
-            p5.ellipse(bubble.x, bubble.y, bubble.radius * 2);
-            p5.fill(s.bubbleColor.r, s.bubbleColor.g, s.bubbleColor.b, 200);
-            bubble.x += p5.random(-1, 1);
-            bubble.y += p5.random(-1, 1);
-        }
-
-        let dot = {
-            x: p5.random(p5.width),
-            y: p5.random(p5.height),
-            radius: p5.random(s.radiusMin, s.radiusMax),
-        };
-        s.bubbles.push(dot);
-        if (s.bubbles.length > 200) {
-            s.bubbles = [];
-        }
-        p5.noStroke();
-    };
-
-    const windowResized = (p5) => {
-        p5.resizeCanvas(window.innerWidth, window.innerHeight);
-    };
-
-    // Scrolling changes the bubble colour. Two guards stop it from flashing:
-    //  - ignore input at a scroll edge (rubber-banding keeps firing wheel/
-    //    touch events even though the page can't move)
-    //  - never recolour more than ~5x/second
-    const randomiseColour = (p5) => {
-        const s = state.current;
-        const now = performance.now();
-        if (now - s.lastColorAt < 200) return;
-        s.lastColorAt = now;
-        s.bubbleColor.r = p5.random(200, 250);
-        s.bubbleColor.g = p5.random(200, 250);
-        s.bubbleColor.b = p5.random(200, 250);
-    };
-
-    const scrollBlockedAtEdge = (direction) => {
-        const y = window.scrollY;
-        const max =
-            document.documentElement.scrollHeight - window.innerHeight;
-        return (
-            (direction < 0 && y <= 0) || (direction > 0 && y >= max - 1)
-        );
-    };
-
-    const mouseWheel = (p5, event) => {
-        const s = state.current;
-        if (scrollBlockedAtEdge(event.delta)) {
-            s.delta = 0;
-            return;
-        }
-        s.delta += event.delta;
-        if (Math.abs(s.delta) >= 130) {
-            randomiseColour(p5);
-            s.delta = 0;
-        }
-    };
-
-    const touchMoved = (p5, event) => {
-        const s = state.current;
-        if (!mobile.prop) return;
-        const y =
-            event.touches?.[0]?.screenY ??
-            event.targetTouches?.[0]?.screenY;
-        if (y == null) return;
-        if (s.lastTouchY != null) {
-            const move = s.lastTouchY - y; // >0 = swiping toward page bottom
-            if (!scrollBlockedAtEdge(move)) {
-                s.deltaMobile += Math.abs(move);
-                if (s.deltaMobile >= 600) {
-                    randomiseColour(p5);
-                    s.deltaMobile = 0;
-                }
-            }
-        }
-        s.lastTouchY = y;
-    };
-
-    const touchEnded = () => {
-        state.current.lastTouchY = null;
-    };
-
-    return (
-        <Sketch
-            setup={setup}
-            draw={draw}
-            windowResized={windowResized}
-            mouseWheel={mouseWheel}
-            touchMoved={touchMoved}
-            touchEnded={touchEnded}
-        />
-    );
+    return <div ref={mountRef} />;
 }
