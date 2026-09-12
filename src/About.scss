@@ -33,6 +33,21 @@
     height: 100%;
     object-fit: cover;
 }
+.profile-image.skeleton {
+    background-color: var(--fg);
+}
+
+.skeleton-lines {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding-top: 6px;
+
+    .skeleton {
+        height: 14px;
+        width: 100%;
+    }
+}
 
 @media (max-width: 650px) {
     .about-text-container {

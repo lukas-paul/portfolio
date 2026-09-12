@@ -16,7 +16,7 @@ export default function About() {
             <div className="title">
                 <h1 className="headline">{data?.title || "About"}</h1>
             </div>
-            {data && (
+            {data ? (
                 <div className="about-text-container">
                     {data.profileImage && (
                         <div className="profile-image">
@@ -32,6 +32,16 @@ export default function About() {
                         value={data.body}
                         components={portableTextComponents}
                     />
+                </div>
+            ) : (
+                <div className="about-text-container" aria-hidden="true">
+                    <div className="profile-image skeleton" />
+                    <div className="skeleton-lines">
+                        <div className="skeleton" />
+                        <div className="skeleton" />
+                        <div className="skeleton" />
+                        <div className="skeleton" style={{ width: "70%" }} />
+                    </div>
                 </div>
             )}
         </div>

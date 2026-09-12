@@ -86,6 +86,26 @@ section {
     }
 }
 
+// shown only on a page's first-ever load this session (before there's any
+// cached content to show); mirrors the real project card's proportions so
+// the layout doesn't jump once the actual content arrives
+.project-skeleton {
+    width: min(100%, 640px);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    .skeleton {
+        height: 14px;
+    }
+    .skeleton-image {
+        width: 100%;
+        aspect-ratio: 16 / 10;
+        border-radius: 4px;
+        height: auto;
+    }
+}
+
 // oversized, near-invisible chapter marker in the right-hand dead space
 .project-index {
     grid-column: 2;

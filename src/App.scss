@@ -279,6 +279,30 @@ h3.headline {
     transform: translateZ(0);
 }
 
+// shared loading-placeholder block, used while a page's Sanity content
+// hasn't arrived yet (first visit this session — repeat visits are served
+// from cache and never see this)
+@keyframes skeleton-pulse {
+    0%,
+    100% {
+        opacity: 0.16;
+    }
+    50% {
+        opacity: 0.08;
+    }
+}
+.skeleton {
+    background-color: var(--fg);
+    opacity: 0.16;
+    border-radius: 6px;
+    animation: skeleton-pulse 1.4s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+    .skeleton {
+        animation: none;
+    }
+}
+
 .sub-page-content {
     margin-left: var(--content-x);
     padding-top: 24px;

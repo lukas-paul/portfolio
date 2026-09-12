@@ -32,6 +32,21 @@ export default function Projects({ mobile }) {
                 <h1 className="headline">{page?.title || "Projects"}</h1>
                 {page?.intro && <p className="projects-intro">{page.intro}</p>}
                 <section className="project-list" ref={listRef}>
+                    {!data &&
+                        [0, 1].map((i) => (
+                            <div
+                                className="project-skeleton"
+                                key={i}
+                                aria-hidden="true"
+                            >
+                                <div className="skeleton skeleton-image" />
+                                <div className="skeleton" />
+                                <div
+                                    className="skeleton"
+                                    style={{ width: "70%" }}
+                                />
+                            </div>
+                        ))}
                     {projectData &&
                         projectData.map((project, index) => (
                             <article className="project" key={project._id}>
