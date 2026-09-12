@@ -48,7 +48,7 @@ export default function Home() {
         mount.appendChild(renderer.domElement);
 
         const small = window.innerWidth < 650;
-        const geometry = new IcosahedronGeometry(small ? 1.9 : 2.6, 1);
+        const geometry = new IcosahedronGeometry(small ? 1.9 : 2.1, 1);
         const material = new MeshPhysicalMaterial({
             color: 0x9a9aa2,
             transparent: true,
@@ -70,7 +70,7 @@ export default function Home() {
             new LineBasicMaterial({
                 color: 0x5c5c66,
                 transparent: true,
-                opacity: 0.45,
+                opacity: 0.35,
             })
         );
         mesh.add(edges);
@@ -93,9 +93,10 @@ export default function Home() {
         };
 
         const IDLE_SPEED = reduceMotion ? 0 : 0.06;
-        const BOOST_DECAY = 0.94;
-        const BOOST_FROM_SCROLL = 0.00025;
-        const MAX_BOOST = reduceMotion ? 0 : 3.5;
+        const BOOST_DECAY = 0.95;
+        const BOOST_FROM_SCROLL = 0.0006;
+        const MAX_BOOST = reduceMotion ? 0 : 6;
+        const BASE_X = small ? 0.9 : 2.2;
 
         const animate = (now) => {
             state.rafId = requestAnimationFrame(animate);
@@ -116,11 +117,14 @@ export default function Home() {
             const spin = IDLE_SPEED + state.spinBoost;
             mesh.rotation.y += spin * dt;
             mesh.rotation.x += spin * 0.6 * dt;
+            mesh.rotation.z += spin * 0.4 * dt;
 
             if (!reduceMotion) {
                 // Lazy curved drift, independent of the scroll-driven spin.
-                mesh.position.x = Math.sin(state.elapsed * 0.15) * 0.7;
+                mesh.position.x = BASE_X + Math.sin(state.elapsed * 0.15) * 0.7;
                 mesh.position.y = Math.cos(state.elapsed * 0.11) * 0.5;
+            } else {
+                mesh.position.x = BASE_X;
             }
 
             state.spinBoost *= BOOST_DECAY;
