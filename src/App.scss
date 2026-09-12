@@ -272,6 +272,11 @@ h3.headline {
     top: 0px;
     left: 0px;
     z-index: -1;
+    // promotes the canvas to its own compositing layer — without this,
+    // fixed-position elements are prone to visibly snapping to a stale
+    // position during momentum scrolling on mobile Safari
+    will-change: transform;
+    transform: translateZ(0);
 }
 
 .sub-page-content {

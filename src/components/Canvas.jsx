@@ -147,9 +147,19 @@ export default function Home({ darkMode }) {
         };
         state.rafId = requestAnimationFrame(animate);
 
+        // Mobile browsers fire `resize` whenever their address bar
+        // collapses or expands during scroll — a height-only change with
+        // the width untouched. Reacting to that recomputes the camera's
+        // aspect ratio and visibly shifts the shape sideways on screen
+        // (nothing in world space moved; only the projection did), which
+        // reads as the shape jumping mid-scroll. A real resize/orientation
+        // change always moves the width too, so only react to those.
+        let lastWidth = window.innerWidth;
         const handleResize = () => {
             const w = window.innerWidth;
             const h = window.innerHeight;
+            if (w === lastWidth) return;
+            lastWidth = w;
             camera.aspect = w / h;
             camera.updateProjectionMatrix();
             renderer.setSize(w, h);
