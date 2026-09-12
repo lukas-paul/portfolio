@@ -8,13 +8,13 @@
 
     // center the links within the area right of the nav rail
     padding: 22px var(--gutter) 22px calc(var(--rail) + var(--gutter));
-    background: white;
-    border-top: 3px solid black;
+    background: var(--bg);
+    border-top: 3px solid var(--fg);
     text-align: center;
     font-size: var(--fs-200);
 
     a {
-        color: black;
+        color: var(--fg);
     }
     a:hover {
         text-decoration: underline;

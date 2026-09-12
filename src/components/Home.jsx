@@ -15,7 +15,13 @@ export default function Home() {
     const settings = data?.settings;
     const home = data?.home;
 
-    const [animateVal, setAnimateVal] = useState("On");
+    const [darkMode, setDarkMode] = useState(
+        () => localStorage.getItem("theme") === "dark"
+    );
+    useEffect(() => {
+        document.documentElement.dataset.theme = darkMode ? "dark" : "light";
+        localStorage.setItem("theme", darkMode ? "dark" : "light");
+    }, [darkMode]);
 
     // React.lazy starts fetching the Canvas chunk (three.js) the moment
     // it's about to render, which by default is immediately on mount —
@@ -31,24 +37,16 @@ export default function Home() {
         return () => cancelIdle(id);
     }, []);
 
-    const switchAnimate = () => {
-        if (animateVal === "On") {
-            setAnimateVal("Off");
-        }
-        if (animateVal === "Off") {
-            setAnimateVal("On");
-        }
-    };
     return (
         <main>
             <Seo />
             <button
                 type="button"
-                className="animate"
-                onClick={switchAnimate}
-                aria-pressed={animateVal === "On"}
+                className="theme-toggle"
+                onClick={() => setDarkMode((v) => !v)}
+                aria-pressed={darkMode}
             >
-                Animate: {animateVal}
+                Dark Mode: {darkMode ? "On" : "Off"}
             </button>
             <div className="header">
                 <div>
@@ -70,10 +68,10 @@ export default function Home() {
                     groups={home?.techGroups}
                 />
             </div>
-            {canvasReady && animateVal && animateVal === "On" && (
+            {canvasReady && (
                 <div className="canvas-parent">
                     <Suspense fallback={null}>
-                        <Canvas />
+                        <Canvas darkMode={darkMode} />
                     </Suspense>
                 </div>
             )}

@@ -14,12 +14,19 @@ import {
     DoubleSide,
 } from "three";
 
+const BASE_MATERIAL_COLOR = 0x9a9aa2;
+const BASE_EDGE_COLOR = 0x5c5c66;
+// Same channel-complement used for the site's black/white theme swap, so
+// the shape's colors invert exactly in step with the page.
+const invertHex = (hex) => hex ^ 0xffffff;
+
 // A slowly drifting, translucent monochrome faceted shape. Idle motion
 // wanders along a lazy Lissajous-style curve; scrolling (wheel, touch,
 // trackpad, keyboard — anything that moves window.scrollY) adds a
 // temporary spin boost that decays back to the idle drift.
-export default function Home() {
+export default function Home({ darkMode }) {
     const mountRef = useRef(null);
+    const materialsRef = useRef(null);
 
     useEffect(() => {
         const mount = mountRef.current;
@@ -50,7 +57,9 @@ export default function Home() {
         const small = window.innerWidth < 650;
         const geometry = new IcosahedronGeometry(small ? 1.4 : 2.1, 1);
         const material = new MeshPhysicalMaterial({
-            color: 0x9a9aa2,
+            color: darkMode
+                ? invertHex(BASE_MATERIAL_COLOR)
+                : BASE_MATERIAL_COLOR,
             transparent: true,
             opacity: 0.32,
             roughness: 0.35,
@@ -65,15 +74,17 @@ export default function Home() {
         // Faint edges to give the facets a bit of definition against a
         // light background, since flat, low-opacity fill alone reads as
         // a formless blob.
+        const edgeMaterial = new LineBasicMaterial({
+            color: darkMode ? invertHex(BASE_EDGE_COLOR) : BASE_EDGE_COLOR,
+            transparent: true,
+            opacity: 0.35,
+        });
         const edges = new LineSegments(
             new EdgesGeometry(geometry),
-            new LineBasicMaterial({
-                color: 0x5c5c66,
-                transparent: true,
-                opacity: 0.35,
-            })
+            edgeMaterial
         );
         mesh.add(edges);
+        materialsRef.current = { material, edgeMaterial };
 
         scene.add(new AmbientLight(0xffffff, 0.6));
         const key = new DirectionalLight(0xffffff, 0.8);
@@ -159,13 +170,27 @@ export default function Home() {
                 handleVisibility
             );
             mount.removeChild(renderer.domElement);
+            materialsRef.current = null;
             geometry.dispose();
             material.dispose();
             edges.geometry.dispose();
-            edges.material.dispose();
+            edgeMaterial.dispose();
             renderer.dispose();
         };
     }, []);
+
+    // Live-update the shape's colors when the theme toggle changes without
+    // tearing down and rebuilding the whole WebGL scene.
+    useEffect(() => {
+        const materials = materialsRef.current;
+        if (!materials) return;
+        materials.material.color.setHex(
+            darkMode ? invertHex(BASE_MATERIAL_COLOR) : BASE_MATERIAL_COLOR
+        );
+        materials.edgeMaterial.color.setHex(
+            darkMode ? invertHex(BASE_EDGE_COLOR) : BASE_EDGE_COLOR
+        );
+    }, [darkMode]);
 
     return <div ref={mountRef} />;
 }
