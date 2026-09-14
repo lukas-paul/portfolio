@@ -23,7 +23,8 @@ const invertHex = (hex) => hex ^ 0xffffff;
 // A slowly drifting, translucent monochrome faceted shape. Idle motion
 // wanders along a lazy Lissajous-style curve; scrolling (wheel, touch,
 // trackpad, keyboard — anything that moves window.scrollY) adds a
-// temporary spin boost that decays back to the idle drift.
+// temporary speed boost that decays back to the idle spin speed, in
+// whichever direction the most recent scroll movement was.
 export default function Home({ darkMode }) {
     const mountRef = useRef(null);
     const materialsRef = useRef(null);
@@ -96,6 +97,7 @@ export default function Home({ darkMode }) {
 
         const state = {
             spinBoost: 0,
+            direction: 1,
             lastScrollY: window.scrollY,
             elapsed: 0,
             rafId: null,
@@ -120,15 +122,20 @@ export default function Home({ darkMode }) {
             const scrollY = window.scrollY;
             const scrollDelta = scrollY - state.lastScrollY;
             state.lastScrollY = scrollY;
-            state.spinBoost = Math.max(
-                -MAX_BOOST,
-                Math.min(
-                    state.spinBoost + scrollDelta * BOOST_FROM_SCROLL,
-                    MAX_BOOST
-                )
+            // The direction persists until the next actual scroll movement
+            // flips it — scrolling up doesn't just briefly reverse the
+            // spin, it turns the shape around for good, and it stays that
+            // way (even once the boost below decays out to the idle speed)
+            // until you scroll down again.
+            if (scrollDelta !== 0) {
+                state.direction = Math.sign(scrollDelta);
+            }
+            state.spinBoost = Math.min(
+                state.spinBoost + Math.abs(scrollDelta) * BOOST_FROM_SCROLL,
+                MAX_BOOST
             );
 
-            const spin = IDLE_SPEED + state.spinBoost;
+            const spin = state.direction * (IDLE_SPEED + state.spinBoost);
             mesh.rotation.y += spin * dt;
             mesh.rotation.x += spin * 0.6 * dt;
             mesh.rotation.z += spin * 0.4 * dt;
