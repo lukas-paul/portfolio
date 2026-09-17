@@ -34,7 +34,12 @@ export const projectsQuery = `{
         projectType,
         link,
         tags,
-        mainImage{ "url": asset->url, alt }
+        mainImage{
+            "url": asset->url,
+            alt,
+            "width": asset->metadata.dimensions.width,
+            "height": asset->metadata.dimensions.height
+        }
     }
 }`;
 

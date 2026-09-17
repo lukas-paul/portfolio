@@ -4,6 +4,7 @@ import { useSanity } from "../sanity/useSanity.js";
 import { projectsQuery } from "../sanity/queries.js";
 import { useProjectScroll } from "../hooks/useProjectScroll.js";
 import { sizedImage } from "../sanity/image.js";
+import { ProjectListSkeleton } from "./skeletons.jsx";
 import "../Projects.scss";
 import "../ProjectsMobile.scss";
 
@@ -32,21 +33,7 @@ export default function Projects({ mobile }) {
                 <h1 className="headline">{page?.title || "Projects"}</h1>
                 {page?.intro && <p className="projects-intro">{page.intro}</p>}
                 <section className="project-list" ref={listRef}>
-                    {!data &&
-                        [0, 1].map((i) => (
-                            <div
-                                className="project-skeleton"
-                                key={i}
-                                aria-hidden="true"
-                            >
-                                <div className="skeleton skeleton-image" />
-                                <div className="skeleton" />
-                                <div
-                                    className="skeleton"
-                                    style={{ width: "70%" }}
-                                />
-                            </div>
-                        ))}
+                    {!data && <ProjectListSkeleton />}
                     {projectData &&
                         projectData.map((project, index) => (
                             <article className="project" key={project._id}>
@@ -78,6 +65,10 @@ export default function Projects({ mobile }) {
                                                     { width: 1280 }
                                                 )}
                                                 alt={project.mainImage?.alt || ""}
+                                                width={project.mainImage?.width}
+                                                height={
+                                                    project.mainImage?.height
+                                                }
                                             />
                                         </button>
                                         {showOverlay !== index && (
