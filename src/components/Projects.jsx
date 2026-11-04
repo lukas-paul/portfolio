@@ -3,7 +3,7 @@ import Seo from "./Seo";
 import { useSanity } from "../sanity/useSanity.js";
 import { projectsQuery } from "../sanity/queries.js";
 import { useProjectScroll } from "../hooks/useProjectScroll.js";
-import { sizedImage } from "../sanity/image.js";
+import { sizedImage, sizedSrcSet } from "../sanity/image.js";
 import { ProjectListSkeleton } from "./skeletons.jsx";
 import "../Projects.scss";
 import "../ProjectsMobile.scss";
@@ -64,6 +64,12 @@ export default function Projects({ mobile }) {
                                                     project.mainImage?.url,
                                                     { width: 1280 }
                                                 )}
+                                                srcSet={sizedSrcSet(
+                                                    project.mainImage?.url,
+                                                    [640, 960, 1280]
+                                                )}
+                                                // .image-section caps at 640px
+                                                sizes="(max-width: 640px) 100vw, 640px"
                                                 alt={project.mainImage?.alt || ""}
                                                 width={project.mainImage?.width}
                                                 height={

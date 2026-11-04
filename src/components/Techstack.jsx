@@ -1,4 +1,5 @@
 import React from "react";
+import { sizedImage } from "../sanity/image.js";
 import "../Techstack.scss";
 
 function Skill({ skill }) {
@@ -8,7 +9,8 @@ function Skill({ skill }) {
             {skill.icon && (
                 <img
                     className="stack-icon"
-                    src={skill.icon}
+                    // 48px icon, 2x for high-DPI screens
+                    src={sizedImage(skill.icon, { width: 96 })}
                     alt={skill.name}
                     width="48"
                     height="48"
